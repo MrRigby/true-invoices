@@ -1,0 +1,3 @@
+rootProject.name = 'true-invoices'
+
+include 'modules:model', 'modules:repository', 'modules:service', 'modules:rest'
