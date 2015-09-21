@@ -1,4 +1,6 @@
-package com.github.mrrigby.trueinvoices.entity;
+package com.github.mrrigby.trueinvoices.infrastructure.entity;
+
+import com.github.mrrigby.trueinvoices.model.PaymentKind;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,9 +33,9 @@ public class InvoiceEntity {
     @Column(name = "payment_date", nullable = false)
     private Date paymentDate;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_kind_id", nullable = false)
-    private PaymentKindEntity paymentKind;
+    @Column(name = "payment_kind")
+    @Enumerated(value = EnumType.STRING)
+    private PaymentKind paymentKind;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id", nullable = false)
@@ -85,11 +87,11 @@ public class InvoiceEntity {
         this.paymentDate = paymentDate;
     }
 
-    public PaymentKindEntity getPaymentKind() {
+    public PaymentKind getPaymentKind() {
         return paymentKind;
     }
 
-    public void setPaymentKind(PaymentKindEntity paymentKind) {
+    public void setPaymentKind(PaymentKind paymentKind) {
         this.paymentKind = paymentKind;
     }
 

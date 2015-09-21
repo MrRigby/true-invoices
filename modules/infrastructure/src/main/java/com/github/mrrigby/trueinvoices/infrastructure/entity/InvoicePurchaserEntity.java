@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.entity;
+package com.github.mrrigby.trueinvoices.infrastructure.entity;
 
 import javax.persistence.*;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
  * @author MrRigby
  */
 @Entity
-@Table(name = "purchaser_templates")
-public class PurchaserTemplateEntity {
+@Table(name = "invoice_purchasers")
+public class InvoicePurchaserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,6 +16,9 @@ public class PurchaserTemplateEntity {
 
     @Embedded
     private PurchaserDataEmbeddable purchaserData;
+
+    @Column(name = "role")
+    private String role;
 
     public Long getId() {
         return id;
@@ -31,5 +34,13 @@ public class PurchaserTemplateEntity {
 
     public void setPurchaserData(PurchaserDataEmbeddable purchaserData) {
         this.purchaserData = purchaserData;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

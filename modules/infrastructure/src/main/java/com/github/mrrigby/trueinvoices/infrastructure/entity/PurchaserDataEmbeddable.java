@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.entity;
+package com.github.mrrigby.trueinvoices.infrastructure.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

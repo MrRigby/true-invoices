@@ -9,41 +9,10 @@ import java.util.Optional;
  */
 public class Purchaser {
 
-    private Optional<Long> id;
-
     private String name;
     private String address;
     private String taxIdentifier;
 
-    public Optional<Long> getId() {
-        return id;
-    }
+    private String role;
 
-    public void setId(Optional<Long> id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getTaxIdentifier() {
-        return taxIdentifier;
-    }
-
-    public void setTaxIdentifier(String taxIdentifier) {
-        this.taxIdentifier = taxIdentifier;
-    }
 }

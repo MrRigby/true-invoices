@@ -1,7 +1,8 @@
-package com.github.mrrigby.trueinvoices.config;
+package com.github.mrrigby.trueinvoices.infrastructure.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -15,6 +16,10 @@ import java.util.Properties;
  */
 @Configuration
 @PropertySource("classpath:/hibernate-config.properties")
+@ComponentScan({
+        "com.github.mrrigby.trueinvoices.infrastructure.repository",
+        "com.github.mrrigby.trueinvoices.infrastructure.mapper"
+})
 public class RepositoryConfig {
 
     @Bean
@@ -33,7 +38,7 @@ public class RepositoryConfig {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
 
         factoryBean.setDataSource(dataSource);
-        factoryBean.setPackagesToScan("com.github.mrrigby.trueinvoices.entity");
+        factoryBean.setPackagesToScan("com.github.mrrigby.trueinvoices.infrastructure.entity");
         factoryBean.setHibernateProperties(hibernateProperties(env));
 
         return factoryBean;

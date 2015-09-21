@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.entity;
+package com.github.mrrigby.trueinvoices.infrastructure.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class TaxRateEntity {
     private String description;
 
     @Column(name = "value", nullable = false)
-    private Integer value;
+    private Short value;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "valid_from")
@@ -46,11 +46,11 @@ public class TaxRateEntity {
         this.description = description;
     }
 
-    public Integer getValue() {
+    public Short getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Short value) {
         this.value = value;
     }
 

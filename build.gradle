@@ -64,7 +64,7 @@ dependencies {
 	compile "com.mysema.querydsl:querydsl-sql-codegen:3.6.2"
 
     compile project('modules:model')
-    compile project('modules:repository')
+    compile project('modules:infrastructure')
     compile project('modules:service')
     compile project('modules:rest')
 }
