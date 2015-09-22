@@ -1,14 +1,16 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceEntity;
-import com.github.mrrigby.trueinvoices.infrastructure.mapper.InvoiceMapper;
+import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.InvoiceMapper;
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
+import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author MrRigby
@@ -26,28 +28,39 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     }
 
     @Override
-    public Invoice getById(Long id) {
+    @Transactional(readOnly = true)
+    public Invoice getById(Long id) throws InvoiceNotFoundException {
+
         InvoiceEntity invoiceEntity = sessionFactory.getCurrentSession().get(InvoiceEntity.class, id);
+        if (invoiceEntity == null) {
+            throw new InvoiceNotFoundException("No invoice with id: " + id);
+        }
+
         return invoiceMapper.entityToModel(invoiceEntity);
     }
 
     @Override
-    public Invoice getByBusinessId(String businessId) {
+    @Transactional(readOnly = true)
+    public Invoice getByBusinessId(String businessId) throws InvoiceNotFoundException {
 
         Criteria invoiceEntityCriteria = sessionFactory.getCurrentSession().createCriteria(InvoiceEntity.class)
                 .add(Restrictions.eq("businessId", businessId));
 
         InvoiceEntity invoiceEntity = (InvoiceEntity) invoiceEntityCriteria.uniqueResult();
+        if (invoiceEntity == null) {
+            throw new InvoiceNotFoundException("No invoice with businessId: " + businessId);
+        }
+
         return invoiceMapper.entityToModel(invoiceEntity);
     }
 
     @Override
     public void save(Invoice invoice) {
-
+        throw new UnsupportedOperationException("Not implemented yet!");
     }
 
     @Override
     public void update(Invoice invoice) {
-
+        throw new UnsupportedOperationException("Not implemented yet!");
     }
 }

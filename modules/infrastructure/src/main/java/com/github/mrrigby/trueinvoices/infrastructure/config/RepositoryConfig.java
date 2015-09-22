@@ -1,12 +1,15 @@
 package com.github.mrrigby.trueinvoices.infrastructure.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -16,10 +19,8 @@ import java.util.Properties;
  */
 @Configuration
 @PropertySource("classpath:/hibernate-config.properties")
-@ComponentScan({
-        "com.github.mrrigby.trueinvoices.infrastructure.repository",
-        "com.github.mrrigby.trueinvoices.infrastructure.mapper"
-})
+@ComponentScan("com.github.mrrigby.trueinvoices.infrastructure.repository")
+@EnableTransactionManagement
 public class RepositoryConfig {
 
     @Bean
@@ -58,4 +59,8 @@ public class RepositoryConfig {
         };
     }
 
+    @Bean
+    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
+        return new HibernateTransactionManager(sessionFactory);
+    }
 }

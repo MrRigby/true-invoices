@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.infrastructure.mapper;
+package com.github.mrrigby.trueinvoices.infrastructure.repository.mapper;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceItemEntity;
 import com.github.mrrigby.trueinvoices.model.InvoiceItem;

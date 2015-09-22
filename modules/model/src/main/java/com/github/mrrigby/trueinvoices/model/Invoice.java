@@ -1,9 +1,10 @@
 package com.github.mrrigby.trueinvoices.model;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -39,6 +40,38 @@ public class Invoice {
 
         // eagerly calculated derivatives
         this.paymentDate = paymentKind.calculatePaymentDate(soldDate);
+    }
+
+    public Optional<Long> getId() {
+        return id;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public LocalDate getDocumentDate() {
+        return documentDate;
+    }
+
+    public LocalDate getSoldDate() {
+        return soldDate;
+    }
+
+    public PaymentKind getPaymentKind() {
+        return paymentKind;
+    }
+
+    public List<InvoiceItem> getItems() {
+        return items;
+    }
+
+    public List<Purchaser> getPurchasers() {
+        return purchasers;
+    }
+
+    public LocalDate getPaymentDate() {
+        return paymentDate;
     }
 
     @Override
@@ -86,7 +119,8 @@ public class Invoice {
         }
 
         public Builder withDocumentDate(Date documentDate) {
-            this.documentDate = documentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Instant instant = Instant.ofEpochMilli(documentDate.getTime());
+            LocalDate res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
             return this;
         }
 
@@ -96,7 +130,8 @@ public class Invoice {
         }
 
         public Builder withSoldDate(Date soldDate) {
-            this.soldDate = soldDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Instant instant = Instant.ofEpochMilli(soldDate.getTime());
+            LocalDate res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
             return this;
         }
 
