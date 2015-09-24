@@ -2,6 +2,7 @@ buildscript {
 	ext {
 		springBootVersion = '1.1.8.RELEASE'
 		springHateoasVersion = '0.17.0.RELEASE'
+		jacksonVersion = '2.5.1'
 	}
 }
 
@@ -10,6 +11,6 @@ dependencies {
 	
 	compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
 	compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-	compile "com.fasterxml.jackson.core:jackson-databind:2.5.1"
+	compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 	compile "org.springframework.hateoas:spring-hateoas:${springHateoasVersion}"
 }

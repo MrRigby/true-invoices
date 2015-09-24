@@ -1,5 +1,10 @@
 package com.github.mrrigby.trueinvoices.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.mrrigby.trueinvoices.model.json.LocalDateSerializer;
+import com.github.mrrigby.trueinvoices.model.json.OptionalSerializer;
 import com.google.common.base.MoreObjects;
 
 import java.time.Instant;
@@ -38,38 +43,53 @@ public class Invoice {
         this.soldDate = soldDate;
         this.paymentKind = paymentKind;
 
+        this.items = new ArrayList<>(items);
+        this.purchasers = new ArrayList<>(purchasers);
+
         // eagerly calculated derivatives
         this.paymentDate = paymentKind.calculatePaymentDate(soldDate);
     }
 
+    @JsonGetter
+    @JsonSerialize(using = OptionalSerializer.LongOptionalSerializer.class)
     public Optional<Long> getId() {
         return id;
     }
 
+    @JsonGetter
     public String getBusinessId() {
         return businessId;
     }
 
+    @JsonGetter
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getDocumentDate() {
         return documentDate;
     }
 
+    @JsonGetter
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getSoldDate() {
         return soldDate;
     }
 
+    @JsonGetter
     public PaymentKind getPaymentKind() {
         return paymentKind;
     }
 
+    @JsonGetter
     public List<InvoiceItem> getItems() {
         return items;
     }
 
+    @JsonGetter
     public List<Purchaser> getPurchasers() {
         return purchasers;
     }
 
+    @JsonGetter
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getPaymentDate() {
         return paymentDate;
     }
@@ -145,8 +165,18 @@ public class Invoice {
             return this;
         }
 
+        public Builder withItem(InvoiceItem.Builder itemBuilder) {
+            this.withItem(itemBuilder.build());
+            return this;
+        }
+
         public Builder withItems(InvoiceItem... items) {
-            this.items.addAll(Arrays.asList(items));
+            Arrays.asList(items).forEach(this::withItem);
+            return this;
+        }
+
+        public Builder withItems(InvoiceItem.Builder... itemBuilders) {
+            Arrays.asList(itemBuilders).forEach(this::withItem);
             return this;
         }
 
@@ -155,8 +185,18 @@ public class Invoice {
             return this;
         }
 
+        public Builder withPurchaser(Purchaser.Builder purchaserBuilder) {
+            this.withPurchaser(purchaserBuilder.build());
+            return this;
+        }
+
         public Builder withPurchasers(Purchaser... purchasers) {
-            this.purchasers.addAll(Arrays.asList(purchasers));
+            Arrays.asList(purchasers).forEach(this::withPurchaser);
+            return this;
+        }
+
+        public Builder withPurchasers(Purchaser.Builder... purchaserBuilders) {
+            Arrays.asList(purchaserBuilders).forEach(this::withPurchaser);
             return this;
         }
 

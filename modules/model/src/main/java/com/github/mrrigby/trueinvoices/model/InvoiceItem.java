@@ -1,5 +1,7 @@
 package com.github.mrrigby.trueinvoices.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
@@ -43,30 +45,37 @@ public class InvoiceItem {
         this.totalGrossPrice = getSingleGrossPrice().multiply(this.quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    @JsonGetter
     public String getCommodity() {
         return commodity;
     }
 
+    @JsonGetter
     public BigDecimal getQuantity() {
         return quantity;
     }
 
+    @JsonGetter
     public BigDecimal getSingleNetPrice() {
         return singleNetPrice;
     }
 
+    @JsonUnwrapped
     public TaxRate getTaxRate() {
         return taxRate;
     }
 
+    @JsonGetter
     public BigDecimal getSingleGrossPrice() {
         return singleGrossPrice;
     }
 
+    @JsonGetter
     public BigDecimal getTotalNetPrice() {
         return totalNetPrice;
     }
 
+    @JsonGetter
     public BigDecimal getTotalGrossPrice() {
         return totalGrossPrice;
     }

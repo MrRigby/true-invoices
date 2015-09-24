@@ -1,0 +1,9 @@
+buildscript {
+	ext {
+		jacksonVersion = '2.5.1'
+	}
+}
+
+dependencies {
+	compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+}

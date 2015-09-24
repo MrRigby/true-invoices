@@ -1,5 +1,7 @@
 package com.github.mrrigby.trueinvoices.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
@@ -27,6 +29,7 @@ public class TaxRate {
         return String.format("%d %%", percentageTaxRate);
     }
 
+    @JsonGetter("percentageTaxRate")
     public Short toShort() {
         return new Short(percentageTaxRate);
     }
