@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.github.mrrigby.trueinvoices.model.InvoiceSummary.anInvoiceSummary;
+
 /**
  * A model class responsible for holding the data of single invoice. Each
  * invoice is related to one purchaser and consists of at least one position.
@@ -78,7 +80,7 @@ public class Invoice {
         return paymentKind;
     }
 
-    @JsonGetter
+    @JsonGetter("items")
     public List<InvoiceItem> getItems() {
         return items;
     }
@@ -92,6 +94,14 @@ public class Invoice {
     @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getPaymentDate() {
         return paymentDate;
+    }
+
+    @JsonGetter("summary")
+    public InvoiceSummary calculateInvoiceSummary() {
+        InvoiceSummary invoiceSummary = anInvoiceSummary()
+                .withItems(items)
+                .build();
+        return invoiceSummary;
     }
 
     @Override

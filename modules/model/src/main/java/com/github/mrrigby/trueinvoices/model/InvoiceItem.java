@@ -6,6 +6,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * A single position of the invoice.
@@ -32,17 +33,17 @@ public class InvoiceItem {
         Preconditions.checkNotNull(taxRate);
 
         Preconditions.checkArgument(quantity > 0, "Quantity must be positive number");
-        Preconditions.checkArgument(singleNetPrice.compareTo(BigDecimal.ZERO) > 0, "SingleNetPrice must be positive number");
+        Preconditions.checkArgument(singleNetPrice.compareTo(BigDecimal.ZERO) >= 0, "SingleNetPrice cannot be negative number!");
 
         this.commodity = commodity;
         this.quantity = new BigDecimal(quantity);
-        this.singleNetPrice = singleNetPrice;
+        this.singleNetPrice = singleNetPrice.setScale(2, RoundingMode.HALF_UP);
         this.taxRate = taxRate;
 
         // eagerly calculated derivatives
-        this.singleGrossPrice = singleNetPrice.add(singleNetPrice.multiply(taxRate.toFraction())).setScale(2, BigDecimal.ROUND_HALF_UP);
-        this.totalNetPrice = getSingleNetPrice().multiply(this.quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
-        this.totalGrossPrice = getSingleGrossPrice().multiply(this.quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.singleGrossPrice = taxRate.grossFor(singleNetPrice);
+        this.totalNetPrice = getSingleNetPrice().multiply(this.quantity).setScale(2, RoundingMode.HALF_UP);
+        this.totalGrossPrice = getSingleGrossPrice().multiply(this.quantity).setScale(2, RoundingMode.HALF_UP);
     }
 
     @JsonGetter
@@ -60,6 +61,7 @@ public class InvoiceItem {
         return singleNetPrice;
     }
 
+    @JsonGetter
     @JsonUnwrapped
     public TaxRate getTaxRate() {
         return taxRate;
@@ -96,7 +98,7 @@ public class InvoiceItem {
     public static class Builder {
 
         private String commodity;
-        private Integer quantity;
+        private Integer quantity = 1;
         private BigDecimal singleNetPrice;
         private TaxRate taxRate;
 
