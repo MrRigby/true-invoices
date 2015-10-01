@@ -3,7 +3,6 @@ buildscript {
 		spockVersion = "1.0-groovy-2.4"
 		groovyVersion = "2.4.1"
 		springFrameworkVersion = "4.2.0.RELEASE"
-		springDataVersion = "1.0.0.RELEASE"
 	}
 	
     repositories {
@@ -39,7 +38,6 @@ allprojects {
 
     dependencies {
         compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
-		compile "org.springframework.data:spring-data-jdbc-core:${springDataVersion}"
 		compile "org.springframework:spring-jdbc:${springFrameworkVersion}"
 		compile "org.springframework:spring-tx:${springFrameworkVersion}"
 		compile "org.springframework:spring-context-support:${springFrameworkVersion}"

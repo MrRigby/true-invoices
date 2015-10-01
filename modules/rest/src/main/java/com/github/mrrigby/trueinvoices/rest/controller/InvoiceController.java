@@ -1,11 +1,8 @@
 package com.github.mrrigby.trueinvoices.rest.controller;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
-import com.github.mrrigby.trueinvoices.model.InvoiceItem;
 import com.github.mrrigby.trueinvoices.model.PaymentKind;
-import com.github.mrrigby.trueinvoices.model.Purchaser;
 import com.github.mrrigby.trueinvoices.rest.domain.InvoiceResource;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +24,17 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("/invoice")
 public class InvoiceController {
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}",  method = RequestMethod.GET)
     @ResponseBody
     public HttpEntity<InvoiceResource> getInvoice(@PathVariable("id") Long id) {
 
         Invoice invoice = temporarilyMockedInvoice();
         if (invoice != null) {
             InvoiceResource invoiceResource = assemblyInvoiceResource(invoice);
+
+            System.out.println(">>> Returning invoice: " + invoiceResource);
+            System.out.println(">>> Returning invoice: " + invoiceResource.getInvoice());
+
             return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.OK);
         }
 
@@ -42,8 +43,6 @@ public class InvoiceController {
 
     // extract to separate class: *Assembler + probably map model class Invoice to some DTO object
     private InvoiceResource assemblyInvoiceResource(Invoice invoice) {
-
-        System.out.println(">>> invoice.getItems(): " + invoice.getItems());
 
         InvoiceResource invoiceResource = new InvoiceResource(invoice);
         invoiceResource.add(linkTo(methodOn(InvoiceController.class).getInvoice(invoice.getId().get())).withSelfRel());
