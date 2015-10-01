@@ -97,7 +97,7 @@ public class InvoiceItem {
 
     public static class Builder {
 
-        private String commodity;
+        private String commodity = "...";
         private Integer quantity = 1;
         private BigDecimal singleNetPrice;
         private TaxRate taxRate;
