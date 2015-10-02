@@ -31,7 +31,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Transactional(readOnly = true)
     public Invoice getById(Long id) throws InvoiceNotFoundException {
 
-        InvoiceEntity invoiceEntity = sessionFactory.getCurrentSession().get(InvoiceEntity.class, id);
+        InvoiceEntity invoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, id);
         if (invoiceEntity == null) {
             throw new InvoiceNotFoundException("No invoice with id: " + id);
         }

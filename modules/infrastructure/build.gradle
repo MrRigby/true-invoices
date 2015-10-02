@@ -7,5 +7,6 @@ dependencies {
 
     compile "org.springframework:spring-jdbc:${springFrameworkVersion}"
     compile "org.springframework:spring-orm:${springFrameworkVersion}"
-    compile 'org.hibernate:hibernate-core:5.0.0.Final'
+    // compile 'org.hibernate:hibernate-core:5.0.0.Final'
+    compile 'org.hibernate:hibernate-core:4.3.11.Final'
 }
