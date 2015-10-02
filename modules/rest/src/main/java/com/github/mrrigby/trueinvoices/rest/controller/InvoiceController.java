@@ -2,7 +2,9 @@ package com.github.mrrigby.trueinvoices.rest.controller;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.model.PaymentKind;
+import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
 import com.github.mrrigby.trueinvoices.rest.domain.InvoiceResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("/invoice")
 public class InvoiceController {
 
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    public InvoiceController(InvoiceRepository invoiceRepository) {
+        this.invoiceRepository = invoiceRepository;
+    }
+
     @RequestMapping(value = "/{id}",  method = RequestMethod.GET)
     @ResponseBody
     public HttpEntity<InvoiceResource> getInvoice(@PathVariable("id") Long id) {
 
-        Invoice invoice = temporarilyMockedInvoice();
+        Invoice invoice = invoiceRepository.getById(id);
         if (invoice != null) {
             InvoiceResource invoiceResource = assemblyInvoiceResource(invoice);
 

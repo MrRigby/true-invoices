@@ -1,57 +1,71 @@
 package com.github.mrrigby.trueinvoices.rest.controller
-
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.mrrigby.trueinvoices.model.Invoice
+import com.github.mrrigby.trueinvoices.model.PaymentKind
+import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
+import com.github.mrrigby.trueinvoices.rest.commontest.StandaloneMockMvcSpec
 import groovy.json.JsonSlurper
-import org.springframework.hateoas.MediaTypes
-import org.springframework.hateoas.ResourceSupport
-import org.springframework.hateoas.core.DefaultRelProvider
-import org.springframework.hateoas.hal.Jackson2HalModule
-import org.springframework.hateoas.mvc.TypeConstrainedMappingJackson2HttpMessageConverter
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import spock.lang.Specification
 
+import java.time.LocalDate
+
+import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice
+import static com.github.mrrigby.trueinvoices.model.InvoiceItem.anInvoiceItem
+import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * @author MrRigby
  */
-class InvoiceControllerSpec extends Specification {
-
-    static def MockMvc mockMvc
-
-    def setupSpec() {
-
-        TypeConstrainedMappingJackson2HttpMessageConverter messageConverter =
-                new TypeConstrainedMappingJackson2HttpMessageConverter(ResourceSupport.class);
-        messageConverter.setSupportedMediaTypes(Arrays.asList(MediaTypes.HAL_JSON));
-
-        ObjectMapper objectMapper = messageConverter.getObjectMapper();
-        objectMapper.registerModule(new Jackson2HalModule());
-        objectMapper.setHandlerInstantiator(new Jackson2HalModule.HalHandlerInstantiator(new DefaultRelProvider(), null, null))
-
-        mockMvc = MockMvcBuilders.standaloneSetup(new InvoiceController()).setMessageConverters(messageConverter).build()
-    }
+class InvoiceControllerSpec extends StandaloneMockMvcSpec {
 
     def "Should return invoice in JSON"() {
 
         given:
-        // def mockMvc = MockMvcBuilders.standaloneSetup(new InvoiceController()).build()
-        // def mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        def invoiceRepository = Mock(InvoiceRepository.class)
+        def mockMvc = standaloneMockMvcFor(new InvoiceController(invoiceRepository))
+        def invoiceId = 1L
+        1 * invoiceRepository.getById(invoiceId) >> mockedInvoice(invoiceId)
 
         when:
-        def response = mockMvc.perform(
-                MockMvcRequestBuilders.get("/invoice/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-        ).andDo(MockMvcResultHandlers.print())
+        def response = mockMvc
+                .perform(get("/invoice/{id}", invoiceId)
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
 
         then:
         response.andExpect(status().isOk())
         def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
-        content.invoice.id == 100
+        content.invoice.id == invoiceId
         content.invoice.businessId == "2015/09/0001"
         content.invoice.items.size() == 2
     }
 
+    private Invoice mockedInvoice(Long id) {
+        anInvoice()
+            .withId(id)
+            .withBusinessId("2015/09/0001")
+            .withDocumentDate(LocalDate.now())
+            .withSoldDate(LocalDate.now())
+            .withPaymentKind(PaymentKind.CASH)
+            .withItems(
+                anInvoiceItem()
+                    .withCommodity("Prunning trees")
+                    .withQuantity(1)
+                    .withSingleNetPrice(new BigDecimal("499.99"))
+                    .withTaxRate((short) 7),
+                anInvoiceItem()
+                    .withCommodity("Planting shrubs")
+                    .withQuantity(2)
+                    .withSingleNetPrice(new BigDecimal("299.99"))
+                    .withTaxRate((short) 23)
+            ).withPurchaser(
+                aPurchaser()
+                    .withName("John Baker")
+                    .withAddress("Baker Street 12")
+                    .withTaxIdentifier("1234512345")
+                    .withRole("Seller")
+            ).build();
+    }
 }
