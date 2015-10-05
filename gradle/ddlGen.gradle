@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'ddlGen'
+
+configurations {
+    jdbcDrivers
+}
+
+dependencies {
+    jdbcDrivers dblibs
+}
+
+task compileDto (type: JavaCompile) {
+    source = fileTree('modules/infrastructure/src/main/java') {
+        include 'com/github/mrrigby/trueinvoices/infrastructure/entity/**/*.java'
+    }
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = sourceSets.main.output.classesDir
+}
+
+ddlGen.dependsOn(compileDto)
+
+exDdlGen {
+    driverClassName = jdbcConfig["jdbc.driverClassName"]
+    url = jdbcConfig["jdbc.url"]
+    user = jdbcConfig["jdbc.username"]
+    password = jdbcConfig["jdbc.password"]
+    packageName = "com.github.mrrigby.trueinvoices.infrastructure.entity"
+    migrationPath = "${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${jdbcConfig['db']}"
+    classpath = configurations.jdbcDrivers + sourceSets.main.compileClasspath + files(sourceSets.main.output.classesDir)
+}

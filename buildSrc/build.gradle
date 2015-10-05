@@ -1,0 +1,28 @@
+apply plugin: 'groovy'
+
+ext {
+    hibernateVersion = "4.3.11.Final"
+    springFrameworkVersion = "4.1.6.RELEASE"
+    guavaVersion = "17.0"
+    dbcpVersion = "2.0"
+    springDataVersion = "1.0.0.RELEASE"
+    reflectionsVersion = "0.9.8"
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    compile "org.apache.commons:commons-dbcp2:${dbcpVersion}"
+    compile "org.hibernate:hibernate-core:${hibernateVersion}"
+    compile "org.springframework:spring-jdbc:${springFrameworkVersion}"
+    compile "org.springframework:spring-tx:${springFrameworkVersion}"
+    compile "org.springframework.data:spring-data-jdbc-core:${springDataVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "org.reflections:reflections:${reflectionsVersion}"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}

@@ -3,26 +3,37 @@ buildscript {
 		spockVersion = "1.0-groovy-2.4"
 		groovyVersion = "2.4.1"
 		springFrameworkVersion = "4.2.0.RELEASE"
-	}
-	
+        guavaVersion = "18.0"
+        jdbcConfig = [
+                "db" : "h2",
+                "jdbc.driverClassName" : "org.h2.Driver",
+                "jdbc.url" : "jdbc:h2:file:~/tmp/db/true-invoices-test-h2;FILE_LOCK=NO;",
+                "jdbc.username" : "sa",
+                "jdbc.password" : ""
+        ]
+        dblibs = [
+                'com.h2database:h2:1.4.185',
+                'org.apache.derby:derby:10.11.1.1'
+        ]
+    }
+
     repositories {
         maven { url "https://repo.spring.io/libs-release" }
         mavenLocal()
         mavenCentral()
     }
+
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.2.RELEASE"
+        classpath dblibs
 		classpath "org.flywaydb:flyway-gradle-plugin:3.2.1"
 		classpath "com.h2database:h2:1.4.185"
     }
 }
 
-// apply flyway plugin and configure one
-apply plugin: 'org.flywaydb.flyway'
-flyway {
-	url = "jdbc:h2:file:/tmp/db/kiss-invoices-testdb;FILE_LOCK=NO;"
-	user = "sa"
-}
+// apply some plugins
+apply from: "gradle/ddlGen.gradle"
+apply from: "gradle/flyway.gradle"
 
 allprojects {
     repositories {
@@ -42,7 +53,7 @@ allprojects {
 		compile "org.springframework:spring-tx:${springFrameworkVersion}"
 		compile "org.springframework:spring-context-support:${springFrameworkVersion}"
 		compile "org.springframework:spring-context:${springFrameworkVersion}"
-		compile "com.google.guava:guava:18.0"
+		compile "com.google.guava:guava:${guavaVersion}"
 
         testCompile "junit:junit:4.11"
         testCompile "org.springframework:spring-test:${springFrameworkVersion}"
@@ -52,16 +63,13 @@ allprojects {
         
         testRuntime "cglib:cglib-nodep:3.1"          // allows mocking of classes (in addition to interfaces)
         testRuntime "org.objenesis:objenesis:2.1"    // allows mocking of classes without default constructor (together with CGLIB)
-        testRuntime "com.h2database:h2:1.4.185"
+        // testRuntime "com.h2database:h2:1.4.185"
     }
 }
 
 dependencies {
 	compile gradleApi()
 	compile localGroovy()
-
-	compile "org.apache.commons:commons-dbcp2:2.0"
-	compile "com.mysema.querydsl:querydsl-sql-codegen:3.6.2"
 
     compile project('modules:model')
     compile project('modules:infrastructure')

@@ -1,0 +1,7 @@
+apply plugin: 'java'
+apply plugin: 'org.flywaydb.flyway'
+
+flyway {
+    url = "jdbc:h2:file:/tmp/db/kiss-invoices-testdb;FILE_LOCK=NO;"
+    user = "sa"
+}
