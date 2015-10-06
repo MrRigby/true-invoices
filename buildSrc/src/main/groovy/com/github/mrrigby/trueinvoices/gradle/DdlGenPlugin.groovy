@@ -24,7 +24,7 @@ class DdlGenPlugin implements Plugin<Project> {
 
             enrichClasspath(project.exDdlGen)
 
-            def migrationFilePath = "${project.exDdlGen.migrationPath}/V001_schema.sql"
+            def migrationFilePath = "${project.exDdlGen.migrationPath}/V001__schema.sql"
             def hibernateCfg = createHibernateConfig(project.exDdlGen)
             exportSqlSchema(hibernateCfg, migrationFilePath)
 

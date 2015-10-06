@@ -4,13 +4,15 @@ buildscript {
 		groovyVersion = "2.4.1"
 		springFrameworkVersion = "4.2.0.RELEASE"
         guavaVersion = "18.0"
+
         jdbcConfig = [
                 "db" : "h2",
                 "jdbc.driverClassName" : "org.h2.Driver",
-                "jdbc.url" : "jdbc:h2:file:~/tmp/db/true-invoices-test-h2;FILE_LOCK=NO;",
+                "jdbc.url" : "jdbc:h2:file:C:/tmp/db/true-invoices-test-h2;FILE_LOCK=NO;",
                 "jdbc.username" : "sa",
                 "jdbc.password" : ""
         ]
+
         dblibs = [
                 'com.h2database:h2:1.4.185',
                 'org.apache.derby:derby:10.11.1.1'

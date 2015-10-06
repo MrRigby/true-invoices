@@ -1,7 +1,10 @@
-apply plugin: 'java'
 apply plugin: 'org.flywaydb.flyway'
 
 flyway {
-    url = "jdbc:h2:file:/tmp/db/kiss-invoices-testdb;FILE_LOCK=NO;"
-    user = "sa"
+    url = jdbcConfig["jdbc.url"]
+    user = jdbcConfig['jdbc.username']
+    password = jdbcConfig['jdbc.password']
+    locations = [
+            "filesystem:${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${jdbcConfig['db']}"
+    ]
 }
