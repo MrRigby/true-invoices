@@ -1,0 +1,5 @@
+file("${rootProject.projectDir}/gradle/jdbc.${db}.properties").withReader { reader ->
+    def jdbcProps = new Properties()
+    jdbcProps.load(reader)
+    ext.jdbcConfig = jdbcProps
+}

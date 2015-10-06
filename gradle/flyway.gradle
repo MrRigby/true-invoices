@@ -5,6 +5,6 @@ flyway {
     user = jdbcConfig['jdbc.username']
     password = jdbcConfig['jdbc.password']
     locations = [
-            "filesystem:${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${jdbcConfig['db']}"
+            "filesystem:${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${db}"
     ]
 }

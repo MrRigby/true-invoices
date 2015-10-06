@@ -25,6 +25,6 @@ exDdlGen {
     user = jdbcConfig["jdbc.username"]
     password = jdbcConfig["jdbc.password"]
     packageName = "com.github.mrrigby.trueinvoices.infrastructure.entity"
-    migrationPath = "${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${jdbcConfig['db']}"
+    migrationPath = "${rootProject.projectDir}/modules/infrastructure/src/main/resources/dbschema/${db}"
     classpath = configurations.jdbcDrivers + sourceSets.main.compileClasspath + files(sourceSets.main.output.classesDir)
 }
