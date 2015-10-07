@@ -1,10 +1,9 @@
 package com.github.mrrigby.trueinvoices.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.mrrigby.trueinvoices.model.json.LocalDateSerializer;
-import com.github.mrrigby.trueinvoices.model.json.OptionalSerializer;
+import com.github.mrrigby.trueinvoices.model.jsonsupport.LocalDateSerializer;
+import com.github.mrrigby.trueinvoices.model.jsonsupport.OptionalSerializer;
 import com.google.common.base.MoreObjects;
 
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.model.json;
+package com.github.mrrigby.trueinvoices.model.jsonsupport;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

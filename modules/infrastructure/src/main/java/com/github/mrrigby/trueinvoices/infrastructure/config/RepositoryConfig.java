@@ -28,6 +28,8 @@ public class RepositoryConfig {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(env.getProperty("db.driver"));
         dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
         dataSource.setInitialSize(env.getProperty("db.initialSize", Integer.class, 2));
         dataSource.setMaxActive(env.getProperty("db.maxActive", Integer.class, 5));
         return dataSource;

@@ -1,29 +1,42 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository
-
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
+import com.github.mrrigby.trueinvoices.infrastructure.test.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.model.Invoice
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
-
+import org.springframework.transaction.annotation.Transactional
 /**
  * @author MrRigby
  */
 @ContextConfiguration(classes = RepositoryConfig.class)
-class InvoiceRepositorySpec extends Specification {
+@Transactional
+class InvoiceRepositorySpec extends DbDrivenSpec {
+
+    public static invoiceWithNoItems = {
+        invoices id: 1,
+                business_id: "2015/09/03",
+                document_date: "2015-10-01",
+                sold_date: "2015-10-01",
+                payment_date: "2015-10-01",
+                payment_kind: "CASH"
+    }
 
     @Autowired
     def InvoiceRepository invoiceRepository
 
+    def JdbcTemplate jdbcTemplate
+
     def setup() {
-        // maybe something could be inited? :-)
+        jdbcTemplate = new JdbcTemplate(dataSource)
     }
 
-    def "Shoud throw InvoiceNotFoundException for non existing invoice id"() {
+    def "Should throw InvoiceNotFoundException for non existing invoice id"() {
 
         given:
+        dataSet invoiceWithNoItems
         def nonExistingId = 0L
 
         when:
@@ -33,10 +46,11 @@ class InvoiceRepositorySpec extends Specification {
         thrown(InvoiceNotFoundException)
     }
 
-    def "Shoud get invoice by invoice id"() {
+    def "Should get invoice by invoice id"() {
 
         given:
-        def existingId = 5L
+        dataSet invoiceWithNoItems
+        def existingId = 1L
 
         when:
         def Invoice invoice = invoiceRepository.getById(existingId)
@@ -47,9 +61,10 @@ class InvoiceRepositorySpec extends Specification {
         invoice.businessId == "2015/09/03"
     }
 
-    def "Shoud throw InvoiceNotFoundException for non existing business id"() {
+    def "Should throw InvoiceNotFoundException for non existing business id"() {
 
         given:
+        dataSet invoiceWithNoItems
         def nonExistingBusinessId = "2010/01/01"
 
         when:
@@ -59,9 +74,10 @@ class InvoiceRepositorySpec extends Specification {
         thrown(InvoiceNotFoundException)
     }
 
-    def "Shoud get invoice by business id"() {
+    def "Should get invoice by business id"() {
 
         given:
+        dataSet invoiceWithNoItems
         def existingBusinessId = "2015/09/03"
 
         when:
@@ -69,7 +85,7 @@ class InvoiceRepositorySpec extends Specification {
 
         then:
         invoice != null
-        invoice.id.get() == 5L
+        invoice.id.get() == 1L
         invoice.businessId == existingBusinessId
     }
 
