@@ -1,4 +1,5 @@
-package com.github.mrrigby.trueinvoices.rest.commontest
+package com.github.mrrigby.trueinvoices.common.test.rest
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.hateoas.MediaTypes
 import org.springframework.hateoas.ResourceSupport
@@ -8,6 +9,7 @@ import org.springframework.hateoas.mvc.TypeConstrainedMappingJackson2HttpMessage
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification
+
 /**
  * @author MrRigby
  */

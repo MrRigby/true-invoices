@@ -1,8 +1,9 @@
 package com.github.mrrigby.trueinvoices.rest.controller
+
+import com.github.mrrigby.trueinvoices.common.test.rest.StandaloneMockMvcSpec
 import com.github.mrrigby.trueinvoices.model.Invoice
 import com.github.mrrigby.trueinvoices.model.PaymentKind
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
-import com.github.mrrigby.trueinvoices.rest.commontest.StandaloneMockMvcSpec
 import groovy.json.JsonSlurper
 import org.springframework.http.MediaType
 

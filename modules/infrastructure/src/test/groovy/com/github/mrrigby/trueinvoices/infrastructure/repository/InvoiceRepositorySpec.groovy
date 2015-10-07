@@ -1,6 +1,7 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository
+
+import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
-import com.github.mrrigby.trueinvoices.infrastructure.test.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.model.Invoice
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException

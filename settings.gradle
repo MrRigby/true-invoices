@@ -1,3 +1,4 @@
 rootProject.name = 'true-invoices'
 
+include 'modules:common-test'
 include 'modules:model', 'modules:infrastructure', 'modules:service', 'modules:rest'

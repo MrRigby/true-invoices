@@ -5,6 +5,11 @@ buildscript {
 		springFrameworkVersion = "4.2.0.RELEASE"
         guavaVersion = "18.0"
         dbunitVersion = "2.5.1"
+        springBootVersion = '1.2.6.RELEASE'
+        springHateoasVersion = '0.19.0.RELEASE'
+        springDataVersion = '1.11.0.RELEASE'
+        jacksonVersion = '2.5.1'
+        springPluginVersion = '1.2.0.RELEASE'
 
         dblibs = [
                 'com.h2database:h2:1.4.185',

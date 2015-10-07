@@ -1,0 +1,26 @@
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    compile "org.springframework:spring-jdbc:${springFrameworkVersion}"
+    compile "org.springframework:spring-tx:${springFrameworkVersion}"
+    compile "org.springframework:spring-context-support:${springFrameworkVersion}"
+    compile "org.springframework:spring-context:${springFrameworkVersion}"
+    compile "org.springframework.hateoas:spring-hateoas:${springHateoasVersion}"
+    compile "org.springframework.data:spring-data-commons:${springDataVersion}"
+    compile "org.springframework.plugin:spring-plugin-core:${springPluginVersion}"
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
+
+    compile "junit:junit:4.11"
+    compile "org.springframework:spring-test:${springFrameworkVersion}"
+    compile "org.spockframework:spock-core:${spockVersion}"
+    compile "org.spockframework:spock-spring:${spockVersion}"
+    compile "org.hamcrest:hamcrest-core:1.3" // only necessary if Hamcrest matchers are used
+    compile ("org.dbunit:dbunit:${dbunitVersion}") {
+        exclude group: "junit"
+    }
+
+    compile "cglib:cglib-nodep:3.1"          // allows mocking of classes (in addition to interfaces)
+    compile "org.objenesis:objenesis:2.1"    // allows mocking of classes without default constructor (together with CGLIB)
+}

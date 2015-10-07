@@ -1,4 +1,5 @@
-package com.github.mrrigby.trueinvoices.infrastructure.test
+package com.github.mrrigby.trueinvoices.common.test.infrastructure
+
 import groovy.xml.StreamingMarkupBuilder
 import org.dbunit.DataSourceDatabaseTester
 import org.dbunit.IDatabaseTester
