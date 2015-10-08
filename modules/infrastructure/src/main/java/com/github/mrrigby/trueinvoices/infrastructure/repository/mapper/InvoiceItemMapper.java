@@ -19,10 +19,27 @@ public class InvoiceItemMapper {
 
         InvoiceItem.Builder invoiceItemBuilder = anInvoiceItem()
                 .withCommodity(itemEntity.getCommodity())
+                .withAuxiliarySymbol(itemEntity.getAuxiliarySymbol())
+                .withMeasure(itemEntity.getMeasure())
                 .withQuantity(itemEntity.getQuantity())
                 .withSingleNetPrice(itemEntity.getSingleNetPrice())
-                .withTaxRate(itemEntity.getTaxRate().getValue());
+                .withTaxRate(itemEntity.getTaxRate());
 
         return invoiceItemBuilder.build();
+    }
+
+    public InvoiceItemEntity modelToEntity(InvoiceItem item) {
+
+        Preconditions.checkNotNull(item);
+
+        InvoiceItemEntity itemEntity = new InvoiceItemEntity();
+        itemEntity.setQuantity(item.getQuantity());
+        itemEntity.setCommodity(item.getCommodity());
+        itemEntity.setAuxiliarySymbol(item.getAuxiliarySymbol());
+        itemEntity.setMeasure(item.getMeasure());
+        itemEntity.setSingleNetPrice(item.getSingleNetPrice());
+        itemEntity.setTaxRate(item.getTaxRate().toShort());
+
+        return itemEntity;
     }
 }

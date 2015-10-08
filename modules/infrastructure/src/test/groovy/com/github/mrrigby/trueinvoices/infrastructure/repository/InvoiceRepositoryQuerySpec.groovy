@@ -14,16 +14,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @ContextConfiguration(classes = RepositoryConfig.class)
 @Transactional
-class InvoiceRepositorySpec extends DbDrivenSpec {
-
-    public static invoiceWithNoItems = {
-        invoices id: 1,
-                business_id: "2015/09/03",
-                document_date: "2015-10-01",
-                sold_date: "2015-10-01",
-                payment_date: "2015-10-01",
-                payment_kind: "CASH"
-    }
+class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
 
     @Autowired
     def InvoiceRepository invoiceRepository
@@ -37,7 +28,7 @@ class InvoiceRepositorySpec extends DbDrivenSpec {
     def "Should throw InvoiceNotFoundException for non existing invoice id"() {
 
         given:
-        dataSet invoiceWithNoItems
+        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
         def nonExistingId = 0L
 
         when:
@@ -50,7 +41,7 @@ class InvoiceRepositorySpec extends DbDrivenSpec {
     def "Should get invoice by invoice id"() {
 
         given:
-        dataSet invoiceWithNoItems
+        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
         def existingId = 1L
 
         when:
@@ -65,7 +56,7 @@ class InvoiceRepositorySpec extends DbDrivenSpec {
     def "Should throw InvoiceNotFoundException for non existing business id"() {
 
         given:
-        dataSet invoiceWithNoItems
+        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
         def nonExistingBusinessId = "2010/01/01"
 
         when:
@@ -78,7 +69,7 @@ class InvoiceRepositorySpec extends DbDrivenSpec {
     def "Should get invoice by business id"() {
 
         given:
-        dataSet invoiceWithNoItems
+        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
         def existingBusinessId = "2015/09/03"
 
         when:
@@ -89,5 +80,4 @@ class InvoiceRepositorySpec extends DbDrivenSpec {
         invoice.id.get() == 1L
         invoice.businessId == existingBusinessId
     }
-
 }

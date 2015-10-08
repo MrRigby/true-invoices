@@ -16,7 +16,9 @@ import java.math.RoundingMode;
 public class InvoiceItem {
 
     private final String commodity;
-    private final BigDecimal quantity;
+    private final String auxiliarySymbol;
+    private final String measure;
+    private final Integer quantity;
     private final BigDecimal singleNetPrice;
     private final TaxRate taxRate;
 
@@ -25,7 +27,8 @@ public class InvoiceItem {
     private final BigDecimal totalNetPrice;
     private final BigDecimal totalGrossPrice;
 
-    private InvoiceItem(String commodity, Integer quantity, BigDecimal singleNetPrice, TaxRate taxRate) {
+    private InvoiceItem(String commodity, String auxiliarySymbol, String measure,
+                        Integer quantity, BigDecimal singleNetPrice, TaxRate taxRate) {
 
         Preconditions.checkNotNull(commodity);
         Preconditions.checkNotNull(quantity);
@@ -36,14 +39,16 @@ public class InvoiceItem {
         Preconditions.checkArgument(singleNetPrice.compareTo(BigDecimal.ZERO) >= 0, "SingleNetPrice cannot be negative number!");
 
         this.commodity = commodity;
-        this.quantity = new BigDecimal(quantity);
+        this.auxiliarySymbol = auxiliarySymbol;
+        this.measure = measure;
+        this.quantity = quantity;
         this.singleNetPrice = singleNetPrice.setScale(2, RoundingMode.HALF_UP);
         this.taxRate = taxRate;
 
         // eagerly calculated derivatives
         this.singleGrossPrice = taxRate.grossFor(singleNetPrice);
-        this.totalNetPrice = getSingleNetPrice().multiply(this.quantity).setScale(2, RoundingMode.HALF_UP);
-        this.totalGrossPrice = getSingleGrossPrice().multiply(this.quantity).setScale(2, RoundingMode.HALF_UP);
+        this.totalNetPrice = getSingleNetPrice().multiply(new BigDecimal(this.quantity)).setScale(2, RoundingMode.HALF_UP);
+        this.totalGrossPrice = getSingleGrossPrice().multiply(new BigDecimal(this.quantity)).setScale(2, RoundingMode.HALF_UP);
     }
 
     @JsonGetter
@@ -52,7 +57,17 @@ public class InvoiceItem {
     }
 
     @JsonGetter
-    public BigDecimal getQuantity() {
+    public String getAuxiliarySymbol() {
+        return auxiliarySymbol;
+    }
+
+    @JsonGetter
+    public String getMeasure() {
+        return measure;
+    }
+
+    @JsonGetter
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -86,6 +101,8 @@ public class InvoiceItem {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("commodity", commodity)
+                .add("auxiliarySymbol", auxiliarySymbol)
+                .add("measure", measure)
                 .add("quantity", quantity)
                 .add("singleNetPrice", singleNetPrice)
                 .add("taxRate", taxRate)
@@ -98,12 +115,24 @@ public class InvoiceItem {
     public static class Builder {
 
         private String commodity = "...";
+        private String auxiliarySymbol = "-";
+        private String measure = "-";
         private Integer quantity = 1;
         private BigDecimal singleNetPrice;
         private TaxRate taxRate;
 
         public Builder withCommodity(String commodity) {
             this.commodity = commodity;
+            return this;
+        }
+
+        public Builder withAuxiliarySymbol(String auxiliarySymbol) {
+            this.auxiliarySymbol = auxiliarySymbol;
+            return this;
+        }
+
+        public Builder withMeasure(String measure) {
+            this.measure = measure;
             return this;
         }
 
@@ -123,12 +152,12 @@ public class InvoiceItem {
         }
 
         public Builder withTaxRate(Short taxRate) {
-            this.taxRate = new TaxRate(taxRate);
+            this.taxRate = TaxRate.valueOf(taxRate);
             return this;
         }
 
         public InvoiceItem build() {
-            return new InvoiceItem(commodity, quantity, singleNetPrice, taxRate);
+            return new InvoiceItem(commodity, auxiliarySymbol, measure, quantity, singleNetPrice, taxRate);
         }
     }
 

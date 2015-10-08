@@ -1,12 +1,10 @@
 package com.github.mrrigby.trueinvoices.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
@@ -55,7 +53,7 @@ public class TaxRate implements Comparable<TaxRate> {
 
     @JsonGetter("percentageTaxRate")
     public Short toShort() {
-        return new Short(percentageTaxRate);
+        return Short.valueOf(percentageTaxRate);
     }
 
     public BigDecimal toFraction() {
@@ -68,5 +66,13 @@ public class TaxRate implements Comparable<TaxRate> {
         BigDecimal taxValue = netPrice.multiply(this.toFraction());
         BigDecimal calculatedGrossPrice = netPrice.add(taxValue);
         return calculatedGrossPrice.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public static TaxRate valueOf(short percentageTaxRate) {
+        return new TaxRate(percentageTaxRate);
+    }
+
+    public static TaxRate valueOf(int percentageTaxRate) {
+        return valueOf((short) percentageTaxRate);
     }
 }

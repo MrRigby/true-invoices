@@ -21,8 +21,8 @@ public class InvoiceItemEntity {
     @Column(name = "commodity", length = 250, nullable = false)
     private String commodity;
 
-    @Column(name = "symbol", length = 20, nullable = false)
-    private String symbol;
+    @Column(name = "auxiliary_symbol", length = 20, nullable = true)
+    private String auxiliarySymbol;
 
     @Column(name = "measure", length = 20, nullable = false)
     private String measure;
@@ -30,9 +30,8 @@ public class InvoiceItemEntity {
     @Column(name = "single_net_price", scale = 2, nullable = false)
     private BigDecimal singleNetPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "tax_rate_id", nullable = false)
-    private TaxRateEntity taxRate;
+    @Column(name = "tax_rate", nullable = false)
+    private Short taxRate;
 
     public Long getId() {
         return id;
@@ -58,12 +57,12 @@ public class InvoiceItemEntity {
         this.commodity = commodity;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getAuxiliarySymbol() {
+        return auxiliarySymbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setAuxiliarySymbol(String auxiliarySymbol) {
+        this.auxiliarySymbol = auxiliarySymbol;
     }
 
     public String getMeasure() {
@@ -82,11 +81,11 @@ public class InvoiceItemEntity {
         this.singleNetPrice = singleNetPrice;
     }
 
-    public TaxRateEntity getTaxRate() {
+    public Short getTaxRate() {
         return taxRate;
     }
 
-    public void setTaxRate(TaxRateEntity taxRate) {
+    public void setTaxRate(Short taxRate) {
         this.taxRate = taxRate;
     }
 }

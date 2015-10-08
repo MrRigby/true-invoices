@@ -1,11 +1,13 @@
 package com.github.mrrigby.trueinvoices.infrastructure;
 
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig;
-import com.github.mrrigby.trueinvoices.infrastructure.entity.*;
+import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceEntity;
+import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceItemEntity;
+import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoicePurchaserEntity;
+import com.github.mrrigby.trueinvoices.infrastructure.entity.PurchaserDataEmbeddable;
 import com.github.mrrigby.trueinvoices.model.PaymentKind;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -21,25 +23,6 @@ public class TestApp {
 
     private static void initDictionaries(Session session) {
 
-        TaxRateEntity taxRate0 = new TaxRateEntity();
-        taxRate0.setDescription("Rate 0%");
-        taxRate0.setValue((short) 0);
-        session.persist(taxRate0);
-
-        TaxRateEntity taxRate3 = new TaxRateEntity();
-        taxRate3.setDescription("Rate 3%");
-        taxRate3.setValue((short) 3);
-        session.persist(taxRate3);
-
-        TaxRateEntity taxRate7 = new TaxRateEntity();
-        taxRate7.setDescription("Rate 7%");
-        taxRate7.setValue((short) 7);
-        session.persist(taxRate7);
-
-        TaxRateEntity taxRate23 = new TaxRateEntity();
-        taxRate23.setDescription("Rate 23%");
-        taxRate23.setValue((short) 23);
-        session.persist(taxRate23);
     }
 
     public static void main(String[] args) {
@@ -48,32 +31,27 @@ public class TestApp {
         LocalSessionFactoryBean localSessionFactoryBean = ctx.getBean(LocalSessionFactoryBean.class);
         SessionFactory sessionFactory = localSessionFactoryBean.getObject();
 
-        // create session
+        // valueOf session
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         initDictionaries(session);
 
-        TaxRateEntity taxRate3 = (TaxRateEntity) session.createCriteria(TaxRateEntity.class)
-                .add(Restrictions.eq("value", (short) 3)).uniqueResult();
-        TaxRateEntity taxRate7 = (TaxRateEntity) session.createCriteria(TaxRateEntity.class)
-                .add(Restrictions.eq("value", (short) 7)).uniqueResult();
-
         InvoiceItemEntity pos1 = new InvoiceItemEntity();
         pos1.setQuantity(1);
         pos1.setCommodity("Wycinka drzew");
-        pos1.setSymbol("SWW/KWiU/124.554");
+        pos1.setAuxiliarySymbol("SWW/KWiU/124.554");
         pos1.setMeasure("Sztuka");
         pos1.setSingleNetPrice(new BigDecimal(1500.99));
-        pos1.setTaxRate(taxRate7);
+        pos1.setTaxRate((short) 7);
 
         InvoiceItemEntity pos2 = new InvoiceItemEntity();
         pos2.setQuantity(1);
         pos2.setCommodity("Sadzenie trawy");
-        pos2.setSymbol("SWW/KWiU/678.321");
+        pos2.setAuxiliarySymbol("SWW/KWiU/678.321");
         pos2.setMeasure("Sztuka");
         pos2.setSingleNetPrice(new BigDecimal(300.49));
-        pos2.setTaxRate(taxRate3);
+        pos2.setTaxRate((short) 3);
 
         PurchaserDataEmbeddable purchaserData = new PurchaserDataEmbeddable();
         purchaserData.setName("Piekarz");
