@@ -6,6 +6,7 @@ import org.dbunit.IDatabaseTester
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder
 import org.dbunit.operation.DatabaseOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy
 import spock.lang.Specification
 
@@ -18,11 +19,13 @@ class DbDrivenSpec extends Specification {
 
     @Autowired
     DataSource dataSource
+    def JdbcTemplate jdbcTemplate
 
     IDatabaseTester databaseTester
 
     def setup() {
         dataSource != null
+        jdbcTemplate = new JdbcTemplate(dataSource)
         if (!databaseTester) {
             databaseTester = new DataSourceDatabaseTester(new TransactionAwareDataSourceProxy(dataSource))
         }
@@ -46,5 +49,9 @@ class DbDrivenSpec extends Specification {
         def xmlData = new StreamingMarkupBuilder().bind { dataset data}
         def xmlReader = new StringReader(xmlData.toString())
         new FlatXmlDataSetBuilder().build(xmlReader)
+    }
+
+    def int countFromDbTable(tableName) {
+        jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ${tableName}", Integer.class)
     }
 }

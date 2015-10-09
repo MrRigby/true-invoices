@@ -2,10 +2,7 @@ package com.github.mrrigby.trueinvoices.infrastructure.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -18,9 +15,10 @@ import java.util.Properties;
  * @author MrRigby
  */
 @Configuration
-@PropertySource("classpath:/hibernate-config.properties")
+@PropertySource("classpath:/hibernate-config.derby.properties")
 @ComponentScan("com.github.mrrigby.trueinvoices.infrastructure.repository")
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 public class RepositoryConfig {
 
     @Bean

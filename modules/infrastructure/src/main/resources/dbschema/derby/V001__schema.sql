@@ -5,7 +5,7 @@
         commodity varchar(250) not null,
         measure varchar(20) not null,
         quantity integer not null,
-        single_net_price decimal(19,2) not null,
+        single_net_price numeric(19,2) not null,
         tax_rate smallint not null,
         invoice_id bigint not null,
         item_record_number integer,

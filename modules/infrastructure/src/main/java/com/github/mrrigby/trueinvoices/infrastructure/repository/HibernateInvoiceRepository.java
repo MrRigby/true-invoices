@@ -55,6 +55,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     }
 
     @Override
+    @Transactional
     public Long save(Invoice invoice) {
         InvoiceEntity invoiceEntity = invoiceMapper.modelToEntity(invoice);
         Long generatedId = (Long) sessionFactory.getCurrentSession().save(invoiceEntity);
@@ -62,7 +63,10 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     }
 
     @Override
+    @Transactional
     public void update(Invoice invoice) {
-        throw new UnsupportedOperationException("Not implemented yet!");
+
+
+
     }
 }

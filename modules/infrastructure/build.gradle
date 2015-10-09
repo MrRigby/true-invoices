@@ -6,6 +6,8 @@ dependencies {
     compile "org.springframework:spring-orm:${springFrameworkVersion}"
     // compile 'org.hibernate:hibernate-core:5.0.0.Final'
     compile 'org.hibernate:hibernate-core:4.3.11.Final'
+    compile "org.aspectj:aspectjrt:${aspectjVersion}"
+    compile "org.aspectj:aspectjweaver:${aspectjVersion}"
 
     testCompile project(':modules:common-test')
 }

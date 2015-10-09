@@ -37,14 +37,14 @@ public class InvoiceEntity {
     @Enumerated(value = EnumType.STRING)
     private PaymentKind paymentKind;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id", nullable = false)
     @OrderColumn(name = "item_record_number")
     private List<InvoiceItemEntity> items;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id", nullable = false)
-    @OrderColumn(name = "item_record_number")
+    @OrderColumn(name = "purchaser_record_number")
     private List<InvoicePurchaserEntity> purchasers;
 
     public Long getId() {

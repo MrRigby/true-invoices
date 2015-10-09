@@ -114,7 +114,7 @@ public class Invoice {
 
     public static class Builder {
 
-        private Optional<Long> id;
+        private Optional<Long> id = Optional.empty();
         private String businessId;
 
         private LocalDate documentDate = LocalDate.now();

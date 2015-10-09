@@ -62,6 +62,7 @@ public class InvoiceMapper {
         Preconditions.checkNotNull(invoice);
 
         InvoiceEntity entity = new InvoiceEntity();
+        entity.setId(invoice.getId().orElse(null));
         entity.setBusinessId(invoice.getBusinessId());
         entity.setDocumentDate(Date.from(invoice.getDocumentDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         entity.setSoldDate(Date.from(invoice.getSoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));

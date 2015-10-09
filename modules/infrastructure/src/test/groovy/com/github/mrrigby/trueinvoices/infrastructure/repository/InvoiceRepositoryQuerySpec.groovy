@@ -28,7 +28,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
     def "Should throw InvoiceNotFoundException for non existing invoice id"() {
 
         given:
-        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
+        dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies
         def nonExistingId = 0L
 
         when:
@@ -41,7 +41,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
     def "Should get invoice by invoice id"() {
 
         given:
-        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
+        dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies
         def existingId = 1L
 
         when:
@@ -56,7 +56,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
     def "Should throw InvoiceNotFoundException for non existing business id"() {
 
         given:
-        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
+        dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies
         def nonExistingBusinessId = "2010/01/01"
 
         when:
@@ -69,7 +69,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
     def "Should get invoice by business id"() {
 
         given:
-        dataSet InvoiceRepositoryDataSets.getOneInvoiceSpec
+        dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies
         def existingBusinessId = "2015/09/03"
 
         when:

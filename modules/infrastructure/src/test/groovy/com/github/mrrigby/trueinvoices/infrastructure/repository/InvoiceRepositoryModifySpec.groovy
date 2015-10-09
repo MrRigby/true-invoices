@@ -5,9 +5,9 @@ import com.github.mrrigby.trueinvoices.model.PaymentKind
 import com.github.mrrigby.trueinvoices.model.TaxRate
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
+import spock.lang.Ignore
 
 import java.time.LocalDate
 import java.time.Month
@@ -25,12 +25,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
     @Autowired
     def InvoiceRepository invoiceRepository
 
-    def JdbcTemplate jdbcTemplate
-
-    def setup() {
-        jdbcTemplate = new JdbcTemplate(dataSource)
-    }
-
+    @Ignore
     def "Should save invoice"() {
 
         given:
@@ -41,15 +36,11 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                 .withPaymentKind(PaymentKind.TWO_WEEKS)
                 .withItems(
                     anInvoiceItem()
-                            .withCommodity("Pruning trees")
-                            .withQuantity(1)
-                            .withSingleNetPrice(new BigDecimal(1499.99))
-                            .withTaxRate(TaxRate.valueOf(5)),
+                            .withQuantity(1).withCommodity("Pruning trees")
+                            .withSingleNetPrice(new BigDecimal(1499.99)).withTaxRate(TaxRate.valueOf(5)),
                     anInvoiceItem()
-                            .withCommodity("Mowing")
-                            .withQuantity(2)
-                            .withSingleNetPrice(new BigDecimal(449.99))
-                            .withTaxRate(TaxRate.valueOf(7))
+                            .withQuantity(2).withCommodity("Mowing")
+                            .withSingleNetPrice(new BigDecimal(449.99)).withTaxRate(TaxRate.valueOf(7))
                 ).withPurchaser(
                     aPurchaser()
                             .withName("John Doe Inc.")
@@ -57,27 +48,63 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                             .withTaxIdentifier("1234567890")
                             .withRole("Purchaser")
                 ).build()
-        def invoiceCountBefore = countForTable("invoices")
-        def itemsCountBefore = countForTable("invoice_items")
-        def purchasersCountBefore = countForTable("invoice_purchasers")
+        def invoiceCountBefore = countFromDbTable("invoices")
+        def itemsCountBefore = countFromDbTable("invoice_items")
+        def purchasersCountBefore = countFromDbTable("invoice_purchasers")
 
         when:
         def savedInvoiceId = invoiceRepository.save(invoice)
 
         then:
-        def invoiceCountAfter = countForTable("invoices")
-        def itemsCountAfter = countForTable("invoice_items")
-        def purchasersCountAfter = countForTable("invoice_purchasers")
-
+        def invoiceCountAfter = countFromDbTable("invoices")
         invoiceCountAfter == invoiceCountBefore + 1
-        itemsCountAfter == itemsCountBefore + 2
-        purchasersCountAfter == purchasersCountBefore + 1
 
         def dbInvoiceId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM invoices", Integer.class)
         savedInvoiceId == dbInvoiceId
+
+        def itemsCountAfter = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM invoice_items WHERE invoice_id = ?", Integer.class, dbInvoiceId)
+        itemsCountAfter == 2
+
+        def purchasersCountAfter = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM invoice_purchasers WHERE invoice_id = ?", Integer.class, dbInvoiceId)
+        purchasersCountAfter == 1
     }
 
-    private int countForTable(tableName) {
-        jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ${tableName}", Integer.class)
+    def "Should update invoice"() {
+
+        given:
+        dataSet InvoiceRepositoryDataSets.invoiceWithDependencies
+        def invoice = anInvoice()
+                .withId(1L)
+                .withBusinessId("2015/11/0002")
+                .withDocumentDate(LocalDate.of(2015, Month.NOVEMBER, 10))
+                .withSoldDate(LocalDate.of(2015, Month.NOVEMBER, 12))
+                .withPaymentKind(PaymentKind.ONE_WEEK)
+                .withItem(
+                    anInvoiceItem()
+                            .withQuantity(1).withCommodity("Planting apple trees")
+                            .withSingleNetPrice(new BigDecimal(999.99)).withTaxRate(TaxRate.valueOf(23))
+                ).withPurchaser(
+                    aPurchaser()
+                            .withName("Peggy McDonnalds Inc.").withAddress("Wall Street 13, Edinburgh")
+                            .withTaxIdentifier("1212123456")
+                            .withRole("Investor")
+                ).build()
+        def invoiceCountBefore = countFromDbTable("invoices")
+
+        when:
+        invoiceRepository.update(invoice)
+
+        then:
+        def invoiceCountAfter = countFromDbTable("invoices")
+        def itemsCountAfter = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM invoice_items WHERE invoice_id = ?", Integer.class, 1L)
+        def purchasersCountAfter = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM invoice_purchasers WHERE invoice_id = ?", Integer.class, 1L)
+
+        invoiceCountAfter == invoiceCountBefore
+        itemsCountAfter == 1
+        purchasersCountAfter == 1
     }
 }
