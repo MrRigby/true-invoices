@@ -14,6 +14,7 @@ import java.time.Month
 import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice
 import static com.github.mrrigby.trueinvoices.model.InvoiceItem.anInvoiceItem
 import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser
+
 /**
  * @author MrRigby
  */

@@ -1,21 +1,16 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository.mapper;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceEntity;
-import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceItemEntity;
-import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoicePurchaserEntity;
 import com.github.mrrigby.trueinvoices.model.Invoice;
-import com.github.mrrigby.trueinvoices.model.InvoiceItem;
-import com.github.mrrigby.trueinvoices.model.Purchaser;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author MrRigby
@@ -44,15 +39,13 @@ public class InvoiceMapper {
                 .withSoldDate(invoiceEntity.getSoldDate())
                 .withPaymentKind(invoiceEntity.getPaymentKind());
 
-        // private List<InvoiceItem> items;
-        for (InvoiceItemEntity eachItemEntity : invoiceEntity.getItems()) {
-            invoiceBuilder.withItem(invoiceItemMapper.entityToModel(eachItemEntity));
-        }
+        invoiceEntity.getItems().forEach(
+                item -> invoiceBuilder.withItem(invoiceItemMapper.entityToModel(item))
+        );
 
-        // private List<Purchaser> purchasers;
-        for (InvoicePurchaserEntity eachPurchaserEntity : invoiceEntity.getPurchasers()) {
-            invoiceBuilder.withPurchaser(invoicePurchaserMapper.entityToModel(eachPurchaserEntity));
-        }
+        invoiceEntity.getPurchasers().forEach(
+                purchaser -> invoiceBuilder.withPurchaser(invoicePurchaserMapper.entityToModel(purchaser))
+        );
 
         return invoiceBuilder.build();
     }
@@ -70,20 +63,20 @@ public class InvoiceMapper {
         entity.setPaymentKind(invoice.getPaymentKind());
 
         // private List<InvoiceItem> items;
-        List<InvoiceItemEntity> entityItems = new ArrayList<>();
-        for (InvoiceItem eachItem : invoice.getItems()) {
-            entityItems.add(invoiceItemMapper.modelToEntity(eachItem));
-        }
-        entity.setItems(entityItems);
+        entity.setItems(
+                invoice.getItems()
+                        .stream()
+                        .map(invoiceItemMapper::modelToEntity)
+                        .collect(toList())
+        );
 
-        // private List<Purchaser> purchasers;
-        List<InvoicePurchaserEntity> entityPurchasers = new ArrayList<>();
-        for (Purchaser eachPurchaser: invoice.getPurchasers()) {
-            entityPurchasers.add(invoicePurchaserMapper.modelToEntity(eachPurchaser));
-        }
-        entity.setPurchasers(entityPurchasers);
+        entity.setPurchasers(
+                invoice.getPurchasers()
+                        .stream()
+                        .map(invoicePurchaserMapper::modelToEntity)
+                        .collect(toList())
+        );
 
         return entity;
     }
 }
-
