@@ -7,7 +7,6 @@ import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
-import spock.lang.Ignore
 
 import java.time.LocalDate
 import java.time.Month
@@ -25,7 +24,6 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
     @Autowired
     def InvoiceRepository invoiceRepository
 
-    @Ignore
     def "Should save invoice"() {
 
         given:
@@ -75,9 +73,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
 
         given:
         dataSet InvoiceRepositoryDataSets.invoiceWithDependencies
-        def invoice = anInvoice()
-                .withId(1L)
-                .withBusinessId("2015/11/0002")
+        def invoice = anInvoice().withId(1L).withBusinessId("2015/11/0002")
                 .withDocumentDate(LocalDate.of(2015, Month.NOVEMBER, 10))
                 .withSoldDate(LocalDate.of(2015, Month.NOVEMBER, 12))
                 .withPaymentKind(PaymentKind.ONE_WEEK)
@@ -88,8 +84,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                 ).withPurchaser(
                     aPurchaser()
                             .withName("Peggy McDonnalds Inc.").withAddress("Wall Street 13, Edinburgh")
-                            .withTaxIdentifier("1212123456")
-                            .withRole("Investor")
+                            .withTaxIdentifier("1212123456").withRole("Investor")
                 ).build()
         def invoiceCountBefore = countFromDbTable("invoices")
 

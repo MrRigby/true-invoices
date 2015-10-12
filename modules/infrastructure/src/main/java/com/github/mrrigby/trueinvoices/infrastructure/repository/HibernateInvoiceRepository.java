@@ -5,6 +5,7 @@ import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.InvoiceM
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
+import com.google.common.base.Preconditions;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -57,16 +58,21 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Override
     @Transactional
     public Long save(Invoice invoice) {
-        InvoiceEntity invoiceEntity = invoiceMapper.modelToEntity(invoice);
-        Long generatedId = (Long) sessionFactory.getCurrentSession().save(invoiceEntity);
-        return generatedId;
+
+        Preconditions.checkArgument(!invoice.getId().isPresent());
+
+        InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
+        return (Long) sessionFactory.getCurrentSession().save(detachedEntity);
     }
 
     @Override
     @Transactional
     public void update(Invoice invoice) {
 
+        Preconditions.checkArgument(invoice.getId().isPresent());
 
-
+        InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
+        sessionFactory.getCurrentSession().merge(detachedEntity);
+        sessionFactory.getCurrentSession().flush();
     }
 }
