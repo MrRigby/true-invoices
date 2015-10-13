@@ -57,12 +57,14 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
     @Override
     @Transactional
-    public Long save(Invoice invoice) {
+    public Invoice save(Invoice invoice) {
 
         Preconditions.checkArgument(!invoice.getId().isPresent());
 
         InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
-        return (Long) sessionFactory.getCurrentSession().save(detachedEntity);
+        Long invoiceId = (Long) sessionFactory.getCurrentSession().save(detachedEntity);
+
+        return getById(invoiceId);
     }
 
     @Override

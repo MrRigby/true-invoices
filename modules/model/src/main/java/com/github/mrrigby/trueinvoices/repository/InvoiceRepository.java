@@ -32,7 +32,7 @@ public interface InvoiceRepository {
      * @param invoice invoice object to save
      * @return surrogate identifier generated for the created invoice
      */
-    public Long save(Invoice invoice);
+    public Invoice save(Invoice invoice);
 
     /**
      * Updates the invoice object.

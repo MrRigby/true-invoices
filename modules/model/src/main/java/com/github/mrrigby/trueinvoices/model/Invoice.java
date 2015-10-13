@@ -109,6 +109,11 @@ public class Invoice {
                 .add("id", id)
                 .add("businessId", businessId)
                 .add("documentDate", documentDate)
+                .add("soldDate", soldDate)
+                .add("paymentDate", paymentDate)
+                .add("paymentKind", paymentKind)
+                .add("items#", items.size())
+                .add("purchasers#", purchasers.size())
                 .toString();
     }
 
@@ -149,7 +154,7 @@ public class Invoice {
 
         public Builder withDocumentDate(Date documentDate) {
             Instant instant = Instant.ofEpochMilli(documentDate.getTime());
-            LocalDate res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
+            this.documentDate = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
             return this;
         }
 
@@ -160,7 +165,7 @@ public class Invoice {
 
         public Builder withSoldDate(Date soldDate) {
             Instant instant = Instant.ofEpochMilli(soldDate.getTime());
-            LocalDate res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
+            this.soldDate = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
             return this;
         }
 
@@ -184,6 +189,11 @@ public class Invoice {
             return this;
         }
 
+        public Builder withItems(List<InvoiceItem> items) {
+            this.items.addAll(items);
+            return this;
+        }
+
         public Builder withItems(InvoiceItem.Builder... itemBuilders) {
             Arrays.asList(itemBuilders).forEach(this::withItem);
             return this;
@@ -201,6 +211,11 @@ public class Invoice {
 
         public Builder withPurchasers(Purchaser... purchasers) {
             Arrays.asList(purchasers).forEach(this::withPurchaser);
+            return this;
+        }
+
+        public Builder withPurchasers(List<Purchaser> purchasers) {
+            this.purchasers.addAll(purchasers);
             return this;
         }
 

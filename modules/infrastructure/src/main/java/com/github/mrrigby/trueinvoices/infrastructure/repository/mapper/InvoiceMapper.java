@@ -37,15 +37,13 @@ public class InvoiceMapper {
                 .withBusinessId(invoiceEntity.getBusinessId())
                 .withDocumentDate(invoiceEntity.getDocumentDate())
                 .withSoldDate(invoiceEntity.getSoldDate())
-                .withPaymentKind(invoiceEntity.getPaymentKind());
-
-        invoiceEntity.getItems().forEach(
-                item -> invoiceBuilder.withItem(invoiceItemMapper.entityToModel(item))
-        );
-
-        invoiceEntity.getPurchasers().forEach(
-                purchaser -> invoiceBuilder.withPurchaser(invoicePurchaserMapper.entityToModel(purchaser))
-        );
+                .withPaymentKind(invoiceEntity.getPaymentKind())
+                .withItems(invoiceEntity.getItems().stream()
+                                .map(invoiceItemMapper::entityToModel)
+                                .collect(toList()))
+                .withPurchasers(invoiceEntity.getPurchasers().stream()
+                                .map(invoicePurchaserMapper::entityToModel)
+                                .collect(toList()));
 
         return invoiceBuilder.build();
     }
@@ -61,21 +59,12 @@ public class InvoiceMapper {
         entity.setSoldDate(Date.from(invoice.getSoldDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         entity.setPaymentDate(Date.from(invoice.getPaymentDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         entity.setPaymentKind(invoice.getPaymentKind());
-
-        // private List<InvoiceItem> items;
-        entity.setItems(
-                invoice.getItems()
-                        .stream()
+        entity.setItems(invoice.getItems().stream()
                         .map(invoiceItemMapper::modelToEntity)
-                        .collect(toList())
-        );
-
-        entity.setPurchasers(
-                invoice.getPurchasers()
-                        .stream()
+                        .collect(toList()));
+        entity.setPurchasers(invoice.getPurchasers().stream()
                         .map(invoicePurchaserMapper::modelToEntity)
-                        .collect(toList())
-        );
+                        .collect(toList()));
 
         return entity;
     }

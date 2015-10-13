@@ -1,21 +1,16 @@
 package com.github.mrrigby.trueinvoices.rest.controller;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
-import com.github.mrrigby.trueinvoices.model.PaymentKind;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
+import com.github.mrrigby.trueinvoices.rest.domain.InvoiceData;
 import com.github.mrrigby.trueinvoices.rest.domain.InvoiceResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice;
-import static com.github.mrrigby.trueinvoices.model.InvoiceItem.anInvoiceItem;
-import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -33,17 +28,12 @@ public class InvoiceController {
         this.invoiceRepository = invoiceRepository;
     }
 
-    @RequestMapping(value = "/{id}",  method = RequestMethod.GET)
-    @ResponseBody
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public HttpEntity<InvoiceResource> getInvoice(@PathVariable("id") Long id) {
 
         Invoice invoice = invoiceRepository.getById(id);
         if (invoice != null) {
             InvoiceResource invoiceResource = assemblyInvoiceResource(invoice);
-
-            System.out.println(">>> Returning invoice: " + invoiceResource);
-            System.out.println(">>> Returning invoice: " + invoiceResource.getInvoice());
-
             return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.OK);
         }
 
@@ -58,30 +48,28 @@ public class InvoiceController {
         return invoiceResource;
     }
 
-    private Invoice temporarilyMockedInvoice() {
+    @RequestMapping(method = RequestMethod.POST)
+    public HttpEntity<InvoiceResource> saveInvoice(@RequestBody InvoiceData invoiceData) {
 
-        Invoice.Builder invoiceBuilder = anInvoice()
-                .withId(100L)
-                .withBusinessId("2015/09/0001")
-                .withDocumentDate(LocalDate.now())
-                .withSoldDate(LocalDate.now())
-                .withPaymentKind(PaymentKind.CASH)
-                .withItem(anInvoiceItem()
-                        .withCommodity("Prunning trees")
-                        .withQuantity(1)
-                        .withSingleNetPrice(new BigDecimal("499.99"))
-                        .withTaxRate((short) 7))
-                .withItem(anInvoiceItem()
-                        .withCommodity("Planting shrubs")
-                        .withQuantity(2)
-                        .withSingleNetPrice(new BigDecimal("299.99"))
-                        .withTaxRate((short) 23))
-                .withPurchaser(aPurchaser()
-                        .withName("John Baker")
-                        .withAddress("Baker Street 12")
-                        .withTaxIdentifier("1234512345")
-                        .withRole("Seller"));
-
-        return invoiceBuilder.build();
+        try {
+            Invoice invoice = invoiceData.toModel();
+            Invoice savedInvoice = invoiceRepository.save(invoice);
+            InvoiceResource invoiceResource = assemblyInvoiceResource(savedInvoice);
+            return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.CREATED);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<InvoiceResource>(HttpStatus.BAD_REQUEST);
+        }
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<InvoiceResource> updateInvoice(@PathVariable("id") Long id, @RequestBody InvoiceData invoiceData) {
+
+        System.out.println("Update - Got request! " + invoiceData);
+
+        // new ResponseEntity<InvoiceResource>(HttpStatus.OK);
+
+        return new ResponseEntity<InvoiceResource>(HttpStatus.NOT_FOUND);
+    }
+
 }
