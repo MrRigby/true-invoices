@@ -39,6 +39,6 @@ public interface InvoiceRepository {
      *
      * @param invoice invoice object to update
      */
-    public void update(Invoice invoice);
+    public boolean update(Invoice invoice);
 
 }

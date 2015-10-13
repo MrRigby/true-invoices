@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author MrRigby
@@ -28,6 +29,10 @@ public class InvoiceData implements Serializable {
     private List<InvoiceItemData> items;
     private List<PurchaserData> purchasers;
 
+    public Invoice toModel() {
+        return toModel(null);
+    }
+
     public Invoice toModel(Long id) {
 
         Invoice.Builder invoiceBuilder = anInvoice()
@@ -38,8 +43,18 @@ public class InvoiceData implements Serializable {
                 .withPaymentKind(this.paymentKind);
 
         // items
+        if (items != null) {
+            invoiceBuilder.withItems(items.stream()
+                    .map(InvoiceItemData::toModel)
+                    .collect(toList()));
+        }
 
         // purchasers
+        if (purchasers != null) {
+            invoiceBuilder.withPurchasers(purchasers.stream()
+                    .map(PurchaserData::toModel)
+                    .collect(toList()));
+        }
 
         return invoiceBuilder.build();
     }

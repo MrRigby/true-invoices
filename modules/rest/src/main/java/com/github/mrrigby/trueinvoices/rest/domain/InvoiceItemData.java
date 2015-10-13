@@ -1,8 +1,11 @@
 package com.github.mrrigby.trueinvoices.rest.domain;
 
+import com.github.mrrigby.trueinvoices.model.InvoiceItem;
 import com.github.mrrigby.trueinvoices.model.TaxRate;
 
 import java.math.BigDecimal;
+
+import static com.github.mrrigby.trueinvoices.model.InvoiceItem.anInvoiceItem;
 
 /**
  * @author MrRigby
@@ -15,6 +18,19 @@ public class InvoiceItemData {
     private Integer quantity;
     private BigDecimal singleNetPrice;
     private TaxRate taxRate;
+
+    public InvoiceItem toModel() {
+
+        InvoiceItem.Builder itemBuilder = anInvoiceItem()
+                .withCommodity(commodity)
+                .withAuxiliarySymbol(auxiliarySymbol)
+                .withMeasure(measure)
+                .withQuantity(quantity)
+                .withSingleNetPrice(singleNetPrice)
+                .withTaxRate(taxRate);
+
+        return itemBuilder.build();
+    }
 
     public String getCommodity() {
         return commodity;

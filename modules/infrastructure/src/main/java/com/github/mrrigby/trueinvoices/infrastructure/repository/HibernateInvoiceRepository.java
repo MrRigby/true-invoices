@@ -69,12 +69,19 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
     @Override
     @Transactional
-    public void update(Invoice invoice) {
+    public boolean update(Invoice invoice) {
 
         Preconditions.checkArgument(invoice.getId().isPresent());
+
+        Long invoiceId = invoice.getId().get();
+        InvoiceEntity entityToUpdate = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, invoiceId);
+        if (entityToUpdate == null) {
+            return false;
+        }
 
         InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
         sessionFactory.getCurrentSession().merge(detachedEntity);
         sessionFactory.getCurrentSession().flush();
+        return true;
     }
 }

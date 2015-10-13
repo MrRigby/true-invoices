@@ -5,7 +5,6 @@ import com.github.mrrigby.trueinvoices.rest.RestConfig
 import groovy.json.JsonSlurper
 import org.springframework.hateoas.MediaTypes
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Ignore
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -40,18 +39,18 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.paymentDate == "2015-11-21"
         content.invoice.paymentKind == "CASH"
 
-        content.invoice.items.size() == 0
-        //content.invoice.items[0].commodity == "Pruning trees"
-        //content.invoice.items[1].commodity == "Mowing"
+        content.invoice.items.size() == 2
+        content.invoice.items[0].commodity == "Pruning trees"
+        content.invoice.items[1].commodity == "Mowing"
 
-        content.invoice.purchasers.size() == 0
-        //content.invoice.purchasers[0].name == "John Doe Inc."
+        content.invoice.purchasers.size() == 1
+        content.invoice.purchasers[0].name == "John Doe Inc."
     }
 
-    @Ignore
     def "Should update invoice"() {
 
         given:
+        dataSet InvoiceControllerDataSets.invoiceWithDependencies
         def invoiceToUpdate = jsonFromFile("/invoiceToUpdate.json")
         def invoiceId = 1L
 
@@ -65,5 +64,18 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         then:
         response.andExpect(status().isOk())
         def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+
+        content.invoice.id == invoiceId
+        content.invoice.businessId == "123"
+        content.invoice.documentDate == "2015-11-11"
+        content.invoice.soldDate == "2015-11-21"
+        content.invoice.paymentDate == "2015-11-21"
+        content.invoice.paymentKind == "CASH"
+
+        content.invoice.items.size() == 1
+        content.invoice.items[0].commodity == "Planting apple tree"
+
+        content.invoice.purchasers.size() == 1
+        content.invoice.purchasers[0].name == "Mrs Applebaum Co."
     }
 }

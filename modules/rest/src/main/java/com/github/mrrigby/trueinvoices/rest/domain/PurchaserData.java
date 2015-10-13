@@ -1,5 +1,7 @@
 package com.github.mrrigby.trueinvoices.rest.domain;
 
+import com.github.mrrigby.trueinvoices.model.Purchaser;
+
 /**
  * @author MrRigby
  */
@@ -9,6 +11,17 @@ public class PurchaserData {
     private String address;
     private String taxIdentifier;
     private String role;
+
+    public Purchaser toModel() {
+
+        Purchaser.Builder purchaserBuilder = Purchaser.aPurchaser()
+                .withName(name)
+                .withAddress(address)
+                .withTaxIdentifier(taxIdentifier)
+                .withRole(role);
+
+        return purchaserBuilder.build();
+    }
 
     public String getName() {
         return name;

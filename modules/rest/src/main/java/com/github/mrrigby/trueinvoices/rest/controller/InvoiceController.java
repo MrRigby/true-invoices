@@ -7,7 +7,6 @@ import com.github.mrrigby.trueinvoices.rest.domain.InvoiceResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,14 +61,23 @@ public class InvoiceController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<InvoiceResource> updateInvoice(@PathVariable("id") Long id, @RequestBody InvoiceData invoiceData) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public HttpEntity<InvoiceResource> updateInvoice(
+            @PathVariable("id") Long invoiceId, @RequestBody InvoiceData invoiceData) {
 
-        System.out.println("Update - Got request! " + invoiceData);
-
-        // new ResponseEntity<InvoiceResource>(HttpStatus.OK);
-
-        return new ResponseEntity<InvoiceResource>(HttpStatus.NOT_FOUND);
+        try {
+            Invoice invoice = invoiceData.toModel(invoiceId);
+            boolean updated = invoiceRepository.update(invoice);
+            if (!updated) {
+                return new ResponseEntity<InvoiceResource>(HttpStatus.NOT_FOUND);
+            } else {
+                InvoiceResource invoiceResource = assemblyInvoiceResource(invoice);
+                return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.OK);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<InvoiceResource>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
