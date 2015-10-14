@@ -46,8 +46,6 @@ public class InvoiceController {
         Invoice savedInvoice = invoiceRepository.save(invoice);
         InvoiceResource invoiceResource = invoiceResourceAssembler.toHateoasResource(savedInvoice);
         return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.CREATED);
-
-        // ?? this path: return new ResponseEntity<InvoiceResource>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -69,4 +67,6 @@ public class InvoiceController {
                 HttpStatus.NOT_FOUND
         );
     }
+
+    // ?? this path: return new ResponseEntity<InvoiceResource>(HttpStatus.BAD_REQUEST);
 }

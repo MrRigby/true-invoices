@@ -15,8 +15,18 @@ public class InvoiceResourceAssembler {
 
     public InvoiceResource toHateoasResource(Invoice invoice) {
         InvoiceResource invoiceResource = new InvoiceResource(invoice);
-        invoiceResource.add(linkTo(methodOn(InvoiceController.class).getInvoice(invoice.getId().get())).withSelfRel());
+
+        Long invoiceId = invoice.getId().get();
+
+        invoiceResource.add(linkTo(methodOn(InvoiceController.class)
+                .getInvoice(invoiceId))
+                .withSelfRel());
+        invoiceResource.add(linkTo(methodOn(InvoiceController.class)
+                .updateInvoice(invoiceId, null))
+                .withRel("update"));
+
+        // TODO delete?
+
         return invoiceResource;
     }
-
 }
