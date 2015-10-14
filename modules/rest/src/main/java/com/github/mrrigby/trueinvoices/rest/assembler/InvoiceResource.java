@@ -1,4 +1,4 @@
-package com.github.mrrigby.trueinvoices.rest.domain;
+package com.github.mrrigby.trueinvoices.rest.assembler;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import org.springframework.hateoas.ResourceSupport;
