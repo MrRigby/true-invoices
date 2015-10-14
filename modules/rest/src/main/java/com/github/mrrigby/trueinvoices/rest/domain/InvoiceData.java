@@ -29,14 +29,9 @@ public class InvoiceData implements Serializable {
     private List<InvoiceItemData> items;
     private List<PurchaserData> purchasers;
 
-    public Invoice toModel() {
-        return toModel(null);
-    }
-
-    public Invoice toModel(Long id) {
+    public Invoice.Builder toModelBuilder() {
 
         Invoice.Builder invoiceBuilder = anInvoice()
-                .withId(id)
                 .withBusinessId(this.businessId)
                 .withDocumentDate(this.documentDate)
                 .withSoldDate(this.soldDate)
@@ -44,19 +39,19 @@ public class InvoiceData implements Serializable {
 
         // items
         if (items != null) {
-            invoiceBuilder.withItems(items.stream()
-                    .map(InvoiceItemData::toModel)
+            invoiceBuilder.withItemBuilders(items.stream()
+                    .map(InvoiceItemData::toModelBuilder)
                     .collect(toList()));
         }
 
         // purchasers
         if (purchasers != null) {
-            invoiceBuilder.withPurchasers(purchasers.stream()
-                    .map(PurchaserData::toModel)
+            invoiceBuilder.withPurchaserBuilders(purchasers.stream()
+                    .map(PurchaserData::toModelBuilder)
                     .collect(toList()));
         }
 
-        return invoiceBuilder.build();
+        return invoiceBuilder;
     }
 
     public String getBusinessId() {

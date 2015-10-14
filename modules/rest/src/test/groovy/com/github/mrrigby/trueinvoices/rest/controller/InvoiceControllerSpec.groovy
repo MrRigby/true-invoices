@@ -25,7 +25,7 @@ class InvoiceControllerSpec extends StandaloneMockMvcSpec {
 
         given:
         def invoiceRepository = Mock(InvoiceRepository.class)
-        def mockMvc = standaloneMockMvcFor(new InvoiceController(invoiceRepository))
+        def mockMvc = standaloneMockMvcFor(new InvoiceController(invoiceRepository, invoiceResourceAssembler))
         def invoiceId = 1L
         1 * invoiceRepository.getById(invoiceId) >> mockedInvoice(invoiceId)
 

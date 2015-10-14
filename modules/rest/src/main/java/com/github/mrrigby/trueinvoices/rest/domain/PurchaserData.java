@@ -12,7 +12,7 @@ public class PurchaserData {
     private String taxIdentifier;
     private String role;
 
-    public Purchaser toModel() {
+    public Purchaser.Builder toModelBuilder() {
 
         Purchaser.Builder purchaserBuilder = Purchaser.aPurchaser()
                 .withName(name)
@@ -20,7 +20,7 @@ public class PurchaserData {
                 .withTaxIdentifier(taxIdentifier)
                 .withRole(role);
 
-        return purchaserBuilder.build();
+        return purchaserBuilder;
     }
 
     public String getName() {

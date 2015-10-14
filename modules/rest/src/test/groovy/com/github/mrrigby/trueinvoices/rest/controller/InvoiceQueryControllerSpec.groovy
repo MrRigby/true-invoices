@@ -48,4 +48,24 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.purchasers.size() == 1
         content.invoice.purchasers[0].name == "John Doe Inc."
     }
+
+    def "Should get NotFound while getting missing invoice by id"() {
+
+        given:
+        dataSet invoiceWithDependencies
+        def notExistingInvoiceId = 2L
+
+        when:
+        def response = mockMvc
+                .perform(get("/invoice/{id}", notExistingInvoiceId)
+                .contentType(MediaTypes.HAL_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+
+        then:
+        response.andExpect(status().isNotFound())
+        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+        content.httpStatusCode == 404
+        content.httpStatusName == "NOT_FOUND"
+    }
 }

@@ -19,7 +19,7 @@ public class InvoiceItemData {
     private BigDecimal singleNetPrice;
     private TaxRate taxRate;
 
-    public InvoiceItem toModel() {
+    public InvoiceItem.Builder toModelBuilder() {
 
         InvoiceItem.Builder itemBuilder = anInvoiceItem()
                 .withCommodity(commodity)
@@ -29,7 +29,7 @@ public class InvoiceItemData {
                 .withSingleNetPrice(singleNetPrice)
                 .withTaxRate(taxRate);
 
-        return itemBuilder.build();
+        return itemBuilder;
     }
 
     public String getCommodity() {

@@ -2,7 +2,6 @@ package com.github.mrrigby.trueinvoices.rest.assembler;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.rest.controller.InvoiceController;
-import com.github.mrrigby.trueinvoices.rest.domain.InvoiceResource;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

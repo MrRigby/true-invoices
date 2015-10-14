@@ -179,11 +179,6 @@ public class Invoice {
             return this;
         }
 
-        public Builder withItem(InvoiceItem.Builder itemBuilder) {
-            this.withItem(itemBuilder.build());
-            return this;
-        }
-
         public Builder withItems(InvoiceItem... items) {
             Arrays.asList(items).forEach(this::withItem);
             return this;
@@ -194,18 +189,23 @@ public class Invoice {
             return this;
         }
 
-        public Builder withItems(InvoiceItem.Builder... itemBuilders) {
-            Arrays.asList(itemBuilders).forEach(this::withItem);
+        public Builder withItemBuilders(InvoiceItem.Builder... itemBuilders) {
+            Arrays.asList(itemBuilders).forEach(this::withItemBuilder);
+            return this;
+        }
+
+        public Builder withItemBuilder(InvoiceItem.Builder itemBuilder) {
+            this.withItem(itemBuilder.build());
+            return this;
+        }
+
+        public Builder withItemBuilders(List<InvoiceItem.Builder> itemBuilders) {
+            itemBuilders.forEach(this::withItemBuilder);
             return this;
         }
 
         public Builder withPurchaser(Purchaser purchaser) {
             this.purchasers.add(purchaser);
-            return this;
-        }
-
-        public Builder withPurchaser(Purchaser.Builder purchaserBuilder) {
-            this.withPurchaser(purchaserBuilder.build());
             return this;
         }
 
@@ -219,8 +219,19 @@ public class Invoice {
             return this;
         }
 
-        public Builder withPurchasers(Purchaser.Builder... purchaserBuilders) {
-            Arrays.asList(purchaserBuilders).forEach(this::withPurchaser);
+        public Builder withPurchaserBuilder(Purchaser.Builder purchaserBuilder) {
+            this.withPurchaser(purchaserBuilder.build());
+            return this;
+        }
+
+
+        public Builder withPurchaserBuilders(Purchaser.Builder... purchaserBuilders) {
+            Arrays.asList(purchaserBuilders).forEach(this::withPurchaserBuilder);
+            return this;
+        }
+
+        public Builder withPurchaserBuilders(List<Purchaser.Builder> purchaserBuilders) {
+            purchaserBuilders.forEach(this::withPurchaserBuilder);
             return this;
         }
 

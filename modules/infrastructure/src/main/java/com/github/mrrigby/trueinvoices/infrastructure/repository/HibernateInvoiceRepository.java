@@ -67,21 +67,26 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
         return getById(invoiceId);
     }
 
+    /**
+     * Updates the invoice. The invoice has to exist in the datastore, otherwise InvoiceNotFoundException will be thrown.
+     *
+     * @param invoice invoice object to update
+     * @throws InvoiceNotFoundException when no invoice with given {@link Invoice#getId()} found to update
+     */
     @Override
     @Transactional
-    public boolean update(Invoice invoice) {
+    public void update(Invoice invoice) throws InvoiceNotFoundException {
 
         Preconditions.checkArgument(invoice.getId().isPresent());
-
         Long invoiceId = invoice.getId().get();
-        InvoiceEntity entityToUpdate = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, invoiceId);
-        if (entityToUpdate == null) {
-            return false;
+
+        InvoiceEntity actualInvoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, invoiceId);
+        if (actualInvoiceEntity == null) {
+            throw new InvoiceNotFoundException("No invoice to update! InvoiceId = " + invoiceId);
         }
 
-        InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
-        sessionFactory.getCurrentSession().merge(detachedEntity);
+        InvoiceEntity invoiceEntityToUpdate = invoiceMapper.modelToEntity(invoice);
+        sessionFactory.getCurrentSession().merge(invoiceEntityToUpdate);
         sessionFactory.getCurrentSession().flush();
-        return true;
     }
 }

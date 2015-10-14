@@ -39,6 +39,6 @@ public interface InvoiceRepository {
      *
      * @param invoice invoice object to update
      */
-    public boolean update(Invoice invoice);
+    public void update(Invoice invoice) throws InvoiceNotFoundException;
 
 }
