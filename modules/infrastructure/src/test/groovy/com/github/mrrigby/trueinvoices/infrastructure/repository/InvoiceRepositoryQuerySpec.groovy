@@ -6,6 +6,7 @@ import com.github.mrrigby.trueinvoices.model.Invoice
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
@@ -79,5 +80,68 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
         invoice != null
         invoice.id.get() == 1L
         invoice.businessId == existingBusinessId
+    }
+
+    def "Should list all invoices"() {
+
+        given:
+        dataSet InvoiceRepositoryDataSets.manyInvoices
+
+        when:
+        def invoices = invoiceRepository.listAll()
+
+        then:
+        invoices != null
+        invoices.size() == 7
+    }
+
+    def "Should count all invoices"() {
+
+        given:
+        dataSet InvoiceRepositoryDataSets.manyInvoices
+
+        when:
+        def invoicesCount = invoiceRepository.count()
+
+        then:
+        invoicesCount == 7
+    }
+
+    def "Should list 1st page with invoices"() {
+
+        given:
+        dataSet InvoiceRepositoryDataSets.manyInvoices
+        def firstPageable = new PageRequest(0, 5)
+
+        when:
+        def pageWithInvoices = invoiceRepository.listPage(firstPageable)
+
+        then:
+        pageWithInvoices != null
+        pageWithInvoices.totalPages == 2
+        pageWithInvoices.totalElements == 7
+        pageWithInvoices.content != null
+        pageWithInvoices.content.size() == 5
+        pageWithInvoices.content[0].id.get() == 7
+        pageWithInvoices.content[4].id.get() == 3
+    }
+
+    def "Should list next page with invoices"() {
+
+        given:
+        dataSet InvoiceRepositoryDataSets.manyInvoices
+        def firstPageable = new PageRequest(1, 5)
+
+        when:
+        def pageWithInvoices = invoiceRepository.listPage(firstPageable)
+
+        then:
+        pageWithInvoices != null
+        pageWithInvoices.totalPages == 2
+        pageWithInvoices.totalElements == 7
+        pageWithInvoices.content != null
+        pageWithInvoices.content.size() == 2
+        pageWithInvoices.content[0].id.get() == 2
+        pageWithInvoices.content[1].id.get() == 1
     }
 }

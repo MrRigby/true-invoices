@@ -55,7 +55,7 @@ public class TestApp {
 
         PurchaserDataEmbeddable purchaserData = new PurchaserDataEmbeddable();
         purchaserData.setName("Piekarz");
-        purchaserData.setAddress("ul. Piekaniana 7, 60-456 Poznañ");
+        purchaserData.setAddress("ul. Piekaniana 7, 60-456 Poznan");
         purchaserData.setTaxId("1234554321");
         InvoicePurchaserEntity purchaser = new InvoicePurchaserEntity();
         purchaser.setPurchaserData(purchaserData);

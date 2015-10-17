@@ -15,7 +15,7 @@ import java.util.Properties;
  * @author MrRigby
  */
 @Configuration
-@PropertySource("classpath:/hibernate-config.derby.properties")
+@PropertySource("classpath:/hibernate-config.h2.properties")
 @ComponentScan("com.github.mrrigby.trueinvoices.infrastructure.repository")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy

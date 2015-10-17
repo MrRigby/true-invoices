@@ -46,4 +46,22 @@ class InvoiceRepositoryDataSets {
                 role: "Purchaser",
                 purchaser_record_number: 0
     }
+
+    public static manyInvoices = {
+        invoices id: 1, business_id: "2015/09/01",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 2, business_id: "2015/09/02",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 3, business_id: "2015/09/03",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 4, business_id: "2015/09/04",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 5, business_id: "2015/09/05",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 6, business_id: "2015/09/06",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+        invoices id: 7, business_id: "2015/09/07",
+                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+    }
+
 }

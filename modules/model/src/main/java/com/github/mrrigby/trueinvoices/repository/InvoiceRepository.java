@@ -2,6 +2,11 @@ package com.github.mrrigby.trueinvoices.repository;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author MrRigby
@@ -25,6 +30,22 @@ public interface InvoiceRepository {
      * @throws InvoiceNotFoundException when no invoice for given <code>businessId</code> was found
      */
     public Invoice getByBusinessId(String businessId) throws InvoiceNotFoundException;
+
+    /**
+     * List all invoices
+     *
+     * @return unlimited list of all invoices
+     */
+    public List<Invoice> listAll();
+
+    Long count();
+
+    /**
+     * List invoices for given page.
+     *
+     * @return chunk with invoices for given page
+     */
+    public Page<Invoice> listPage(Pageable pageable);
 
     /**
      * Saves the invoice object.

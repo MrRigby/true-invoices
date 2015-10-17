@@ -8,10 +8,19 @@ import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundExce
 import com.google.common.base.Preconditions;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author MrRigby
@@ -53,6 +62,52 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
         }
 
         return invoiceMapper.entityToModel(invoiceEntity);
+    }
+
+    @Override
+    public List<Invoice> listAll() {
+
+        Criteria allInvoiceEntitiessCriteria = sessionFactory.getCurrentSession()
+                .createCriteria(InvoiceEntity.class);
+        List<InvoiceEntity> invoiceEntities = allInvoiceEntitiessCriteria.list();
+
+        List<Invoice> invoices = invoiceEntities.stream()
+                .map(invoiceMapper::entityToModel)
+                .collect(toList());
+
+        return invoices;
+    }
+
+    @Override
+    @Transactional
+    public Long count() {
+
+        Criteria countInvoicesCriteria = sessionFactory.getCurrentSession()
+                .createCriteria(InvoiceEntity.class)
+                .setProjection(Projections.rowCount());
+
+        return (Long) countInvoicesCriteria.uniqueResult();
+    }
+
+    @Override
+    @Transactional
+    public Page<Invoice> listPage(Pageable pageable) {
+
+        Criteria pageableInvoicesCriteria = sessionFactory.getCurrentSession()
+                .createCriteria(InvoiceEntity.class)
+                .setFirstResult(pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .addOrder(Order.desc("documentDate").desc("id"));
+
+        List<InvoiceEntity> invoiceEntities = pageableInvoicesCriteria.list();
+
+        List<Invoice> invoices = invoiceEntities.stream()
+                .map(invoiceMapper::entityToModel)
+                .collect(toList());
+
+        Long invoicesCount = count();
+
+        return new PageImpl<Invoice>(invoices, pageable, invoicesCount);
     }
 
     @Override

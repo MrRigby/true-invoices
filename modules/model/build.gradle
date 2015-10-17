@@ -6,4 +6,5 @@ buildscript {
 
 dependencies {
 	compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+	compile "org.springframework.data:spring-data-commons:${springDataVersion}"
 }
