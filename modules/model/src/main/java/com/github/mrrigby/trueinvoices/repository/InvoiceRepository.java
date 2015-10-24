@@ -32,20 +32,11 @@ public interface InvoiceRepository {
     public Invoice getByBusinessId(String businessId) throws InvoiceNotFoundException;
 
     /**
-     * List all invoices
-     *
-     * @return unlimited list of all invoices
-     */
-    public List<Invoice> listAll();
-
-    Long count();
-
-    /**
      * List invoices for given page.
      *
      * @return chunk with invoices for given page
      */
-    public Page<Invoice> listPage(Pageable pageable);
+    public Page<Invoice> listPage(Pageable pageable, InvoiceListFilter filter);
 
     /**
      * Saves the invoice object.

@@ -3,6 +3,7 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository
 import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
 import com.github.mrrigby.trueinvoices.model.Invoice
+import com.github.mrrigby.trueinvoices.repository.InvoiceListFilter
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -82,39 +83,15 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
         invoice.businessId == existingBusinessId
     }
 
-    def "Should list all invoices"() {
-
-        given:
-        dataSet InvoiceRepositoryDataSets.manyInvoices
-
-        when:
-        def invoices = invoiceRepository.listAll()
-
-        then:
-        invoices != null
-        invoices.size() == 7
-    }
-
-    def "Should count all invoices"() {
-
-        given:
-        dataSet InvoiceRepositoryDataSets.manyInvoices
-
-        when:
-        def invoicesCount = invoiceRepository.count()
-
-        then:
-        invoicesCount == 7
-    }
-
     def "Should list 1st page with invoices"() {
 
         given:
         dataSet InvoiceRepositoryDataSets.manyInvoices
         def firstPageable = new PageRequest(0, 5)
+        def emptyFilter = new InvoiceListFilter()
 
         when:
-        def pageWithInvoices = invoiceRepository.listPage(firstPageable)
+        def pageWithInvoices = invoiceRepository.listPage(firstPageable, emptyFilter)
 
         then:
         pageWithInvoices != null
@@ -131,9 +108,10 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
         given:
         dataSet InvoiceRepositoryDataSets.manyInvoices
         def firstPageable = new PageRequest(1, 5)
+        def emptyFilter = new InvoiceListFilter()
 
         when:
-        def pageWithInvoices = invoiceRepository.listPage(firstPageable)
+        def pageWithInvoices = invoiceRepository.listPage(firstPageable, emptyFilter)
 
         then:
         pageWithInvoices != null

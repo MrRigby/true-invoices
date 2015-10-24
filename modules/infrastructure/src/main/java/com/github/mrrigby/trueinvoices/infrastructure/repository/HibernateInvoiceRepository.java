@@ -3,9 +3,11 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository;
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceEntity;
 import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.InvoiceMapper;
 import com.github.mrrigby.trueinvoices.model.Invoice;
+import com.github.mrrigby.trueinvoices.repository.InvoiceListFilter;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.hibernate.criterion.Restrictions.like;
 
 /**
  * @author MrRigby
@@ -65,36 +68,10 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     }
 
     @Override
-    public List<Invoice> listAll() {
-
-        Criteria allInvoiceEntitiessCriteria = sessionFactory.getCurrentSession()
-                .createCriteria(InvoiceEntity.class);
-        List<InvoiceEntity> invoiceEntities = allInvoiceEntitiessCriteria.list();
-
-        List<Invoice> invoices = invoiceEntities.stream()
-                .map(invoiceMapper::entityToModel)
-                .collect(toList());
-
-        return invoices;
-    }
-
-    @Override
     @Transactional
-    public Long count() {
+    public Page<Invoice> listPage(Pageable pageable, InvoiceListFilter filter) {
 
-        Criteria countInvoicesCriteria = sessionFactory.getCurrentSession()
-                .createCriteria(InvoiceEntity.class)
-                .setProjection(Projections.rowCount());
-
-        return (Long) countInvoicesCriteria.uniqueResult();
-    }
-
-    @Override
-    @Transactional
-    public Page<Invoice> listPage(Pageable pageable) {
-
-        Criteria pageableInvoicesCriteria = sessionFactory.getCurrentSession()
-                .createCriteria(InvoiceEntity.class)
+        Criteria pageableInvoicesCriteria = criteriaForListFilter(filter)
                 .setFirstResult(pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .addOrder(Order.desc("documentDate").desc("id"));
@@ -105,9 +82,38 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
                 .map(invoiceMapper::entityToModel)
                 .collect(toList());
 
-        Long invoicesCount = count();
+        Long invoicesCount = count(filter);
 
         return new PageImpl<Invoice>(invoices, pageable, invoicesCount);
+    }
+
+    private Long count(InvoiceListFilter filter) {
+
+        Criteria countInvoicesCriteria = criteriaForListFilter(filter)
+                .setProjection(Projections.rowCount());
+
+        return (Long) countInvoicesCriteria.uniqueResult();
+    }
+
+    private Criteria criteriaForListFilter(InvoiceListFilter filter) {
+
+        Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(InvoiceEntity.class);
+
+        if (!Strings.isNullOrEmpty(filter.getBusinessIdMask())) {
+            criteria.add(like("businessId", String.format("%%%s%%", filter.getBusinessIdMask())));
+        }
+        if (filter.getDateFrom() != null) {
+            criteria.add(Restrictions.ge("documentDate", filter.getDateFrom()));
+        }
+        if (filter.getDateTo() != null) {
+            criteria.add(Restrictions.le("documentDate", filter.getDateTo()));
+        }
+        if (!Strings.isNullOrEmpty(filter.getPurchaserMask())) {
+            criteria.add(like("purchasers.name", String.format("%%%s%%", filter.getPurchaserMask())));
+        }
+
+        return criteria;
     }
 
     @Override
