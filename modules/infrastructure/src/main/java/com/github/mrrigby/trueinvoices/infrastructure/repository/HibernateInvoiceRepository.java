@@ -99,6 +99,9 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
         Criteria criteria = sessionFactory.getCurrentSession()
                 .createCriteria(InvoiceEntity.class);
+        if (filter == null) {
+            return criteria;
+        }
 
         if (!Strings.isNullOrEmpty(filter.getBusinessIdMask())) {
             criteria.add(like("businessId", String.format("%%%s%%", filter.getBusinessIdMask())));

@@ -1,0 +1,188 @@
+/*
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /invoice/paged
+       Parameters = {page=[0], size=[5]}
+          Headers = {Content-Type=[application/hal+json], Accept=[application/hal+json]}
+
+Handler:
+             Type = com.github.mrrigby.trueinvoices.rest.controller.InvoiceController
+           Method = public org.springframework.http.HttpEntity<org.springframework.hateoas.PagedResources<com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResource>> com.github.mrrigby.trueinvoices.rest.controller.InvoiceController.pagedInvoices(org.springframework.data.domain.Pageable,org.springframework.data.web.PagedResourcesAssembler<com.github.mrrigby.trueinvoices.model.Invoice>)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = {Content-Type=[application/hal+json]}
+     Content type = application/hal+json
+             Body = {"_embedded":{"invoiceResourceList":[{"invoice":{"id":7,"businessId":"2015/09/07","documentDate":"2015-10-01","soldDate":"2015-10-01","paymentKind":"CASH","purchasers":[],"paymentDate":"2015-10-01","items":[],"summary":{"totalNet":0.00,"totalGross":0.00,"itemSummaries":[]}},"_links":{"self":{"href":"http://localhost/invoice/7"},"update":{"href":"http://localhost/invoice/7"}}},{"invoice":{"id":6,"businessId":"2015/09/06","documentDate":"2015-10-01","soldDate":"2015-10-01","paymentKind":"CASH","purchasers":[],"paymentDate":"2015-10-01","items":[],"summary":{"totalNet":0.00,"totalGross":0.00,"itemSummaries":[]}},"_links":{"self":{"href":"http://localhost/invoice/6"},"update":{"href":"http://localhost/invoice/6"}}},{"invoice":{"id":5,"businessId":"2015/09/05","documentDate":"2015-10-01","soldDate":"2015-10-01","paymentKind":"CASH","purchasers":[],"paymentDate":"2015-10-01","items":[],"summary":{"totalNet":0.00,"totalGross":0.00,"itemSummaries":[]}},"_links":{"self":{"href":"http://localhost/invoice/5"},"update":{"href":"http://localhost/invoice/5"}}},{"invoice":{"id":4,"businessId":"2015/09/04","documentDate":"2015-10-01","soldDate":"2015-10-01","paymentKind":"CASH","purchasers":[],"paymentDate":"2015-10-01","items":[],"summary":{"totalNet":0.00,"totalGross":0.00,"itemSummaries":[]}},"_links":{"self":{"href":"http://localhost/invoice/4"},"update":{"href":"http://localhost/invoice/4"}}},{"invoice":{"id":3,"businessId":"2015/09/03","documentDate":"2015-10-01","soldDate":"2015-10-01","paymentKind":"CASH","purchasers":[],"paymentDate":"2015-10-01","items":[],"summary":{"totalNet":0.00,"totalGross":0.00,"itemSummaries":[]}},"_links":{"self":{"href":"http://localhost/invoice/3"},"update":{"href":"http://localhost/invoice/3"}}}]},"_links":{"first":{"href":"http://localhost/invoice/paged?page=0&size=5"},"self":{"href":"http://localhost/invoice/paged"},"next":{"href":"http://localhost/invoice/paged?page=1&size=5"},"last":{"href":"http://localhost/invoice/paged?page=1&size=5"}},"page":{"size":5,"totalElements":7,"totalPages":2,"number":0}}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+*/
+
+{
+  "_embedded": {
+    "invoiceResourceList": [
+      {
+        "invoice": {
+          "id": 7,
+          "businessId": "2015/09/07",
+          "documentDate": "2015-10-01",
+          "soldDate": "2015-10-01",
+          "paymentKind": "CASH",
+          "purchasers": [],
+          "paymentDate": "2015-10-01",
+          "items": [],
+          "summary": {
+            "totalNet": 0.00,
+            "totalGross": 0.00,
+            "itemSummaries": []
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "http://localhost/invoice/7"
+          },
+          "update": {
+            "href": "http://localhost/invoice/7"
+          }
+        }
+      },
+      {
+        "invoice": {
+          "id": 6,
+          "businessId": "2015/09/06",
+          "documentDate": "2015-10-01",
+          "soldDate": "2015-10-01",
+          "paymentKind": "CASH",
+          "purchasers": [],
+          "paymentDate": "2015-10-01",
+          "items": [],
+          "summary": {
+            "totalNet": 0.00,
+            "totalGross": 0.00,
+            "itemSummaries": []
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "http://localhost/invoice/6"
+          },
+          "update": {
+            "href": "http://localhost/invoice/6"
+          }
+        }
+      },
+      {
+        "invoice": {
+          "id": 5,
+          "businessId": "2015/09/05",
+          "documentDate": "2015-10-01",
+          "soldDate": "2015-10-01",
+          "paymentKind": "CASH",
+          "purchasers": [],
+          "paymentDate": "2015-10-01",
+          "items": [],
+          "summary": {
+            "totalNet": 0.00,
+            "totalGross": 0.00,
+            "itemSummaries": []
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "http://localhost/invoice/5"
+          },
+          "update": {
+            "href": "http://localhost/invoice/5"
+          }
+        }
+      },
+      {
+        "invoice": {
+          "id": 4,
+          "businessId": "2015/09/04",
+          "documentDate": "2015-10-01",
+          "soldDate": "2015-10-01",
+          "paymentKind": "CASH",
+          "purchasers": [],
+          "paymentDate": "2015-10-01",
+          "items": [],
+          "summary": {
+            "totalNet": 0.00,
+            "totalGross": 0.00,
+            "itemSummaries": []
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "http://localhost/invoice/4"
+          },
+          "update": {
+            "href": "http://localhost/invoice/4"
+          }
+        }
+      },
+      {
+        "invoice": {
+          "id": 3,
+          "businessId": "2015/09/03",
+          "documentDate": "2015-10-01",
+          "soldDate": "2015-10-01",
+          "paymentKind": "CASH",
+          "purchasers": [],
+          "paymentDate": "2015-10-01",
+          "items": [],
+          "summary": {
+            "totalNet": 0.00,
+            "totalGross": 0.00,
+            "itemSummaries": []
+          }
+        },
+        "_links": {
+          "self": {
+            "href": "http://localhost/invoice/3"
+          },
+          "update": {
+            "href": "http://localhost/invoice/3"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "first": {
+      "href": "http://localhost/invoice/paged?page=0&size=5"
+    },
+    "self": {
+      "href": "http://localhost/invoice/paged"
+    },
+    "next": {
+      "href": "http://localhost/invoice/paged?page=1&size=5"
+    },
+    "last": {
+      "href": "http://localhost/invoice/paged?page=1&size=5"
+    }
+  },
+  "page": {
+    "size": 5,
+    "totalElements": 7,
+    "totalPages": 2,
+    "number": 0
+  }
+}

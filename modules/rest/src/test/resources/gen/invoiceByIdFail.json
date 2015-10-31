@@ -1,0 +1,42 @@
+/*
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /invoice/2
+       Parameters = {}
+          Headers = {Content-Type=[application/hal+json], Accept=[application/hal+json]}
+
+Handler:
+             Type = com.github.mrrigby.trueinvoices.rest.controller.InvoiceController
+           Method = public org.springframework.http.HttpEntity<com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResource> com.github.mrrigby.trueinvoices.rest.controller.InvoiceController.getInvoice(java.lang.Long)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = {Content-Type=[application/hal+json]}
+     Content type = application/hal+json
+             Body = {"httpStatusCode":404,"httpStatusName":"NOT_FOUND","messages":"No invoice with id: 2","requestUrl":"/invoice/2"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+*/
+{
+  "httpStatusCode": 404,
+  "httpStatusName": "NOT_FOUND",
+  "messages": "No invoice with id: 2",
+  "requestUrl": "/invoice/2"
+}

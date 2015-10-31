@@ -1,0 +1,86 @@
+/*
+MockHttpServletRequest:
+      HTTP Method = PUT
+      Request URI = /invoice/1
+       Parameters = {}
+          Headers = {Content-Type=[application/hal+json], Accept=[application/hal+json]}
+
+Handler:
+             Type = com.github.mrrigby.trueinvoices.rest.controller.InvoiceController
+           Method = public org.springframework.http.HttpEntity<com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResource> com.github.mrrigby.trueinvoices.rest.controller.InvoiceController.updateInvoice(java.lang.Long,com.github.mrrigby.trueinvoices.rest.domain.InvoiceData)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = {Content-Type=[application/hal+json]}
+     Content type = application/hal+json
+             Body = {"invoice":{"id":1,"businessId":"123","documentDate":"2015-11-11","soldDate":"2015-11-21","paymentKind":"CASH","purchasers":[{"name":"Mrs Applebaum Co.","address":"Spitfire Street 12, London","taxIdentifier":"1234567890","role":"Purchaser"}],"paymentDate":"2015-11-21","items":[{"commodity":"Planting apple tree","auxiliarySymbol":"SWW/PKWIU/1","measure":"item","quantity":1,"singleNetPrice":1499.99,"percentageTaxRate":5,"singleGrossPrice":1574.99,"totalNetPrice":1499.99,"totalGrossPrice":1574.99}],"summary":{"totalNet":1499.99,"totalGross":1574.99,"itemSummaries":[{"percentageTaxRate":5,"netPrice":1499.99,"grossPrice":1574.99}]}},"_links":{"self":{"href":"http://localhost/invoice/1"},"update":{"href":"http://localhost/invoice/1"}}}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+*/
+{
+  "invoice": {
+    "id": 1,
+    "businessId": "123",
+    "documentDate": "2015-11-11",
+    "soldDate": "2015-11-21",
+    "paymentKind": "CASH",
+    "purchasers": [
+      {
+        "name": "Mrs Applebaum Co.",
+        "address": "Spitfire Street 12, London",
+        "taxIdentifier": "1234567890",
+        "role": "Purchaser"
+      }
+    ],
+    "paymentDate": "2015-11-21",
+    "items": [
+      {
+        "commodity": "Planting apple tree",
+        "auxiliarySymbol": "SWW/PKWIU/1",
+        "measure": "item",
+        "quantity": 1,
+        "singleNetPrice": 1499.99,
+        "percentageTaxRate": 5,
+        "singleGrossPrice": 1574.99,
+        "totalNetPrice": 1499.99,
+        "totalGrossPrice": 1574.99
+      }
+    ],
+    "summary": {
+      "totalNet": 1499.99,
+      "totalGross": 1574.99,
+      "itemSummaries": [
+        {
+          "percentageTaxRate": 5,
+          "netPrice": 1499.99,
+          "grossPrice": 1574.99
+        }
+      ]
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost/invoice/1"
+    },
+    "update": {
+      "href": "http://localhost/invoice/1"
+    }
+  }
+}

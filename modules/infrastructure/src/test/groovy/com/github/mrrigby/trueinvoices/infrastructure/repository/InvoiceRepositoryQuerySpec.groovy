@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
+
 /**
  * @author MrRigby
  */

@@ -8,6 +8,11 @@ import com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResourceAssembler;
 import com.github.mrrigby.trueinvoices.rest.domain.InvoiceData;
 import com.github.mrrigby.trueinvoices.rest.exceptions.ApiError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +32,8 @@ public class InvoiceController {
     private InvoiceResourceAssembler invoiceResourceAssembler;
 
     @Autowired
-    public InvoiceController(InvoiceRepository invoiceRepository, InvoiceResourceAssembler invoiceResourceAssembler) {
+    public InvoiceController(InvoiceRepository invoiceRepository,
+                             InvoiceResourceAssembler invoiceResourceAssembler) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceResourceAssembler = invoiceResourceAssembler;
     }
@@ -35,8 +41,8 @@ public class InvoiceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public HttpEntity<InvoiceResource> getInvoice(@PathVariable("id") Long id) {
         Invoice invoice = invoiceRepository.getById(id);
-        InvoiceResource invoiceResource = invoiceResourceAssembler.toHateoasResource(invoice);
-        return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.OK);
+        InvoiceResource invoiceResource = invoiceResourceAssembler.toResource(invoice);
+        return new ResponseEntity<>(invoiceResource, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -44,8 +50,8 @@ public class InvoiceController {
 
         Invoice invoice = invoiceData.toModelBuilder().build();
         Invoice savedInvoice = invoiceRepository.save(invoice);
-        InvoiceResource invoiceResource = invoiceResourceAssembler.toHateoasResource(savedInvoice);
-        return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.CREATED);
+        InvoiceResource invoiceResource = invoiceResourceAssembler.toResource(savedInvoice);
+        return new ResponseEntity<>(invoiceResource, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -54,15 +60,24 @@ public class InvoiceController {
 
         Invoice invoice = invoiceData.toModelBuilder().withId(invoiceId).build();
         invoiceRepository.update(invoice);
-        InvoiceResource invoiceResource = invoiceResourceAssembler.toHateoasResource(invoice);
-        return new ResponseEntity<InvoiceResource>(invoiceResource, HttpStatus.OK);
+        InvoiceResource invoiceResource = invoiceResourceAssembler.toResource(invoice);
+        return new ResponseEntity<>(invoiceResource, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/paged", method = RequestMethod.GET)
+    public HttpEntity<PagedResources<InvoiceResource>> pagedInvoices(
+            @PageableDefault(size = 20, page = 0) Pageable pageable,
+            PagedResourcesAssembler<Invoice> assembler) {
+        Page<Invoice> invoicesPage = invoiceRepository.listPage(pageable, null);
+        PagedResources<InvoiceResource> invoicesResources = assembler.toResource(invoicesPage, invoiceResourceAssembler);
+        return new ResponseEntity<>(invoicesResources, HttpStatus.OK);
     }
 
     @ExceptionHandler(InvoiceNotFoundException.class)
     public ResponseEntity<ApiError> invoiceNotFound(
             HttpServletRequest request, HttpServletResponse response, Exception ex) {
 
-        return new ResponseEntity<ApiError>(
+        return new ResponseEntity<>(
                 new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI().toString()),
                 HttpStatus.NOT_FOUND
         );

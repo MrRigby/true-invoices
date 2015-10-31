@@ -1,0 +1,102 @@
+/*
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /invoice/1
+       Parameters = {}
+          Headers = {Content-Type=[application/hal+json], Accept=[application/hal+json]}
+
+Handler:
+             Type = com.github.mrrigby.trueinvoices.rest.controller.InvoiceController
+           Method = public org.springframework.http.HttpEntity<com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResource> com.github.mrrigby.trueinvoices.rest.controller.InvoiceController.getInvoice(java.lang.Long)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = {Content-Type=[application/hal+json]}
+     Content type = application/hal+json
+             Body = {"invoice":{"id":1,"businessId":"2015/09/03","documentDate":"2015-10-01","soldDate":"2015-10-02","paymentKind":"TWO_WEEKS","purchasers":[{"name":"John Doe Inc.","address":"Spitfire Street 12, London","taxIdentifier":"1234567890","role":"Purchaser"}],"paymentDate":"2015-10-16","items":[{"commodity":"Pruning trees","auxiliarySymbol":"SWW/PKWIU/1","measure":"item","quantity":1,"singleNetPrice":1499.99,"percentageTaxRate":5,"singleGrossPrice":1574.99,"totalNetPrice":1499.99,"totalGrossPrice":1574.99},{"commodity":"Mowing","auxiliarySymbol":"SWW/PKWIU/2","measure":"item","quantity":2,"singleNetPrice":499.99,"percentageTaxRate":7,"singleGrossPrice":534.99,"totalNetPrice":999.98,"totalGrossPrice":1069.98}],"summary":{"totalNet":2499.97,"totalGross":2644.97,"itemSummaries":[{"percentageTaxRate":5,"netPrice":1499.99,"grossPrice":1574.99},{"percentageTaxRate":7,"netPrice":999.98,"grossPrice":1069.98}]}},"_links":{"self":{"href":"http://localhost/invoice/1"},"update":{"href":"http://localhost/invoice/1"}}}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+*/
+{
+  "invoice": {
+    "id": 1,
+    "businessId": "2015/09/03",
+    "documentDate": "2015-10-01",
+    "soldDate": "2015-10-02",
+    "paymentKind": "TWO_WEEKS",
+    "purchasers": [
+      {
+        "name": "John Doe Inc.",
+        "address": "Spitfire Street 12, London",
+        "taxIdentifier": "1234567890",
+        "role": "Purchaser"
+      }
+    ],
+    "paymentDate": "2015-10-16",
+    "items": [
+      {
+        "commodity": "Pruning trees",
+        "auxiliarySymbol": "SWW/PKWIU/1",
+        "measure": "item",
+        "quantity": 1,
+        "singleNetPrice": 1499.99,
+        "percentageTaxRate": 5,
+        "singleGrossPrice": 1574.99,
+        "totalNetPrice": 1499.99,
+        "totalGrossPrice": 1574.99
+      },
+      {
+        "commodity": "Mowing",
+        "auxiliarySymbol": "SWW/PKWIU/2",
+        "measure": "item",
+        "quantity": 2,
+        "singleNetPrice": 499.99,
+        "percentageTaxRate": 7,
+        "singleGrossPrice": 534.99,
+        "totalNetPrice": 999.98,
+        "totalGrossPrice": 1069.98
+      }
+    ],
+    "summary": {
+      "totalNet": 2499.97,
+      "totalGross": 2644.97,
+      "itemSummaries": [
+        {
+          "percentageTaxRate": 5,
+          "netPrice": 1499.99,
+          "grossPrice": 1574.99
+        },
+        {
+          "percentageTaxRate": 7,
+          "netPrice": 999.98,
+          "grossPrice": 1069.98
+        }
+      ]
+    }
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost/invoice/1"
+    },
+    "update": {
+      "href": "http://localhost/invoice/1"
+    }
+  }
+}

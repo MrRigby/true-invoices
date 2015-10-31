@@ -8,6 +8,7 @@ import org.springframework.hateoas.MediaTypes
 import org.springframework.test.context.ContextConfiguration
 
 import static com.github.mrrigby.trueinvoices.rest.controller.InvoiceControllerDataSets.invoiceWithDependencies
+import static com.github.mrrigby.trueinvoices.rest.controller.InvoiceControllerDataSets.manyInvoices
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -67,5 +68,23 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
         content.httpStatusCode == 404
         content.httpStatusName == "NOT_FOUND"
+    }
+
+    def "Should get paged view of invoices"() {
+
+        given:
+        dataSet manyInvoices
+
+        when:
+        def response = mockMvc
+                .perform(get("/invoice/paged?page=0&size=5")
+                .contentType(MediaTypes.HAL_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+
+        then:
+        response.andExpect(status().isOk())
+        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+        println ">>> " + content
     }
 }
