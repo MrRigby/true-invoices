@@ -43,7 +43,7 @@ class InvoiceRepositoryDataSets {
                 name: "John Doe Inc.",
                 address: "Spitfire Street 12, London",
                 tax_id: "1234567890",
-                role: "Purchaser",
+                role: "PurchaserItem",
                 purchaser_record_number: 0
     }
 

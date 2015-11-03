@@ -2,11 +2,11 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository.mapper;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoicePurchaserEntity;
 import com.github.mrrigby.trueinvoices.infrastructure.entity.PurchaserDataEmbeddable;
-import com.github.mrrigby.trueinvoices.model.Purchaser;
+import com.github.mrrigby.trueinvoices.model.PurchaserItem;
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 
-import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser;
+import static com.github.mrrigby.trueinvoices.model.PurchaserItem.aPurchaser;
 
 /**
  * @author MrRigby
@@ -14,11 +14,11 @@ import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser;
 @Service
 public class InvoicePurchaserMapper {
 
-    public Purchaser entityToModel(InvoicePurchaserEntity purchaserEntity) {
+    public PurchaserItem entityToModel(InvoicePurchaserEntity purchaserEntity) {
 
         Preconditions.checkNotNull(purchaserEntity);
 
-        Purchaser.Builder purchaser = aPurchaser()
+        PurchaserItem.Builder purchaser = aPurchaser()
                 .withName(purchaserEntity.getPurchaserData().getName())
                 .withAddress(purchaserEntity.getPurchaserData().getAddress())
                 .withTaxIdentifier(purchaserEntity.getPurchaserData().getTaxId())
@@ -27,19 +27,19 @@ public class InvoicePurchaserMapper {
         return purchaser.build();
     }
 
-    public InvoicePurchaserEntity modelToEntity(Purchaser purchaser) {
+    public InvoicePurchaserEntity modelToEntity(PurchaserItem purchaserItem) {
 
-        Preconditions.checkNotNull(purchaser);
+        Preconditions.checkNotNull(purchaserItem);
 
         InvoicePurchaserEntity purchaserEntity = new InvoicePurchaserEntity();
 
         PurchaserDataEmbeddable dataSection = new PurchaserDataEmbeddable();
-        dataSection.setName(purchaser.getName());
-        dataSection.setAddress(purchaser.getAddress());
-        dataSection.setTaxId(purchaser.getTaxIdentifier());
+        dataSection.setName(purchaserItem.getName());
+        dataSection.setAddress(purchaserItem.getAddress());
+        dataSection.setTaxId(purchaserItem.getTaxIdentifier());
         purchaserEntity.setPurchaserData(dataSection);
 
-        purchaserEntity.setRole(purchaser.getRole());
+        purchaserEntity.setRole(purchaserItem.getRole());
 
         return purchaserEntity;
     }

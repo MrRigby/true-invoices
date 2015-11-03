@@ -30,14 +30,14 @@ public class Invoice {
 
     private PaymentKind paymentKind;
     private List<InvoiceItem> items;
-    private List<Purchaser> purchasers;
+    private List<PurchaserItem> purchaserItems;
 
     // calculated derivatives
     private LocalDate paymentDate;
 
     private Invoice(Optional<Long> id, String businessId, LocalDate documentDate,
                     LocalDate soldDate, PaymentKind paymentKind,
-                    List<InvoiceItem> items, List<Purchaser> purchasers) {
+                    List<InvoiceItem> items, List<PurchaserItem> purchaserItems) {
         this.id = id;
         this.businessId = businessId;
         this.documentDate = documentDate;
@@ -45,7 +45,7 @@ public class Invoice {
         this.paymentKind = paymentKind;
 
         this.items = new ArrayList<>(items);
-        this.purchasers = new ArrayList<>(purchasers);
+        this.purchaserItems = new ArrayList<>(purchaserItems);
 
         // eagerly calculated derivatives
         this.paymentDate = paymentKind.calculatePaymentDate(soldDate);
@@ -84,9 +84,9 @@ public class Invoice {
         return items;
     }
 
-    @JsonGetter
-    public List<Purchaser> getPurchasers() {
-        return purchasers;
+    @JsonGetter("purchasers")
+    public List<PurchaserItem> getPurchaserItems() {
+        return purchaserItems;
     }
 
     @JsonGetter
@@ -113,7 +113,7 @@ public class Invoice {
                 .add("paymentDate", paymentDate)
                 .add("paymentKind", paymentKind)
                 .add("items#", items.size())
-                .add("purchasers#", purchasers.size())
+                .add("purchaserItems#", purchaserItems.size())
                 .toString();
     }
 
@@ -127,7 +127,7 @@ public class Invoice {
 
         private PaymentKind paymentKind = PaymentKind.CASH;
         private List<InvoiceItem> items = new ArrayList<>();
-        private List<Purchaser> purchasers = new ArrayList<>();
+        private List<PurchaserItem> purchaserItems = new ArrayList<>();
 
         private Builder() {
         }
@@ -204,39 +204,39 @@ public class Invoice {
             return this;
         }
 
-        public Builder withPurchaser(Purchaser purchaser) {
-            this.purchasers.add(purchaser);
+        public Builder withPurchaser(PurchaserItem purchaserItem) {
+            this.purchaserItems.add(purchaserItem);
             return this;
         }
 
-        public Builder withPurchasers(Purchaser... purchasers) {
-            Arrays.asList(purchasers).forEach(this::withPurchaser);
+        public Builder withPurchasers(PurchaserItem... purchaserItems) {
+            Arrays.asList(purchaserItems).forEach(this::withPurchaser);
             return this;
         }
 
-        public Builder withPurchasers(List<Purchaser> purchasers) {
-            this.purchasers.addAll(purchasers);
+        public Builder withPurchasers(List<PurchaserItem> purchaserItems) {
+            this.purchaserItems.addAll(purchaserItems);
             return this;
         }
 
-        public Builder withPurchaserBuilder(Purchaser.Builder purchaserBuilder) {
+        public Builder withPurchaserBuilder(PurchaserItem.Builder purchaserBuilder) {
             this.withPurchaser(purchaserBuilder.build());
             return this;
         }
 
 
-        public Builder withPurchaserBuilders(Purchaser.Builder... purchaserBuilders) {
+        public Builder withPurchaserBuilders(PurchaserItem.Builder... purchaserBuilders) {
             Arrays.asList(purchaserBuilders).forEach(this::withPurchaserBuilder);
             return this;
         }
 
-        public Builder withPurchaserBuilders(List<Purchaser.Builder> purchaserBuilders) {
+        public Builder withPurchaserBuilders(List<PurchaserItem.Builder> purchaserBuilders) {
             purchaserBuilders.forEach(this::withPurchaserBuilder);
             return this;
         }
 
         public Invoice build() {
-            return new Invoice(id, businessId, documentDate, soldDate, paymentKind, items, purchasers);
+            return new Invoice(id, businessId, documentDate, soldDate, paymentKind, items, purchaserItems);
         }
     }
 

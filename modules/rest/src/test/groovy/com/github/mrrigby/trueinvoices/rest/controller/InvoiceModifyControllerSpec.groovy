@@ -43,8 +43,8 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items[0].commodity == "Pruning trees"
         content.invoice.items[1].commodity == "Mowing"
 
-        content.invoice.purchasers.size() == 1
-        content.invoice.purchasers[0].name == "John Doe Inc."
+        content.invoice.purchaserItems.size() == 1
+        content.invoice.purchaserItems[0].name == "John Doe Inc."
     }
 
     def "Should update invoice"() {
@@ -75,8 +75,8 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items.size() == 1
         content.invoice.items[0].commodity == "Planting apple tree"
 
-        content.invoice.purchasers.size() == 1
-        content.invoice.purchasers[0].name == "Mrs Applebaum Co."
+        content.invoice.purchaserItems.size() == 1
+        content.invoice.purchaserItems[0].name == "Mrs Applebaum Co."
     }
 
     def "Should get NotFound while the missing invoice's update"() {

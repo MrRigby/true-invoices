@@ -6,6 +6,8 @@ import org.springframework.hateoas.ResourceSupport;
 import java.io.Serializable;
 
 /**
+ * HATEOAS resource wrapping the {@link Invoice} model instance.
+ *
  * @author MrRigby
  */
 public class InvoiceResource extends ResourceSupport implements Serializable {

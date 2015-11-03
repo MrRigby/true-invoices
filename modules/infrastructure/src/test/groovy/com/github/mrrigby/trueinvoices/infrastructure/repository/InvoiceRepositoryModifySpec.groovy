@@ -13,7 +13,7 @@ import java.time.Month
 
 import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice
 import static com.github.mrrigby.trueinvoices.model.InvoiceItem.anInvoiceItem
-import static com.github.mrrigby.trueinvoices.model.Purchaser.aPurchaser
+import static com.github.mrrigby.trueinvoices.model.PurchaserItem.aPurchaser
 
 /**
  * @author MrRigby
@@ -45,7 +45,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                             .withName("John Doe Inc.")
                             .withAddress("Spitfire Street 12, London")
                             .withTaxIdentifier("1234567890")
-                            .withRole("Purchaser")
+                            .withRole("PurchaserItem")
                 ).build()
         def invoiceCountBefore = countFromDbTable("invoices")
         def itemsCountBefore = countFromDbTable("invoice_items")

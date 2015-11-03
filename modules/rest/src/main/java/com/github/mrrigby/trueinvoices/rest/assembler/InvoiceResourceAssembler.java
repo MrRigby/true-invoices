@@ -9,10 +9,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
+ * HATEOAS assembler able to transform {@link Invoice} model into {@link InvoiceResource}.
+ *
  * @author MrRigby
  */
 @Service
 public class InvoiceResourceAssembler implements ResourceAssembler<Invoice, InvoiceResource> {
+
+    public static final String REL_UPDATE = "update";
 
     @Override
     public InvoiceResource toResource(Invoice invoice) {
@@ -25,9 +29,9 @@ public class InvoiceResourceAssembler implements ResourceAssembler<Invoice, Invo
                 .withSelfRel());
         invoiceResource.add(linkTo(methodOn(InvoiceController.class)
                 .updateInvoice(invoiceId, null))
-                .withRel("update"));
+                .withRel(REL_UPDATE));
 
-        // TODO delete?
+        // TODO delete? other actions?
 
         return invoiceResource;
     }

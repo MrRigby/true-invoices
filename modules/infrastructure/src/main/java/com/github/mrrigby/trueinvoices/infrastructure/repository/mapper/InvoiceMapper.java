@@ -62,7 +62,7 @@ public class InvoiceMapper {
         entity.setItems(invoice.getItems().stream()
                         .map(invoiceItemMapper::modelToEntity)
                         .collect(toList()));
-        entity.setPurchasers(invoice.getPurchasers().stream()
+        entity.setPurchasers(invoice.getPurchaserItems().stream()
                         .map(invoicePurchaserMapper::modelToEntity)
                         .collect(toList()));
 

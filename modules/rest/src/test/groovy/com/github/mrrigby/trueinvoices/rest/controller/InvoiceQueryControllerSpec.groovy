@@ -46,8 +46,8 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items[0].commodity == "Pruning trees"
         content.invoice.items[1].commodity == "Mowing"
 
-        content.invoice.purchasers.size() == 1
-        content.invoice.purchasers[0].name == "John Doe Inc."
+        content.invoice.purchaserItems.size() == 1
+        content.invoice.purchaserItems[0].name == "John Doe Inc."
     }
 
     def "Should get NotFound while getting missing invoice by id"() {

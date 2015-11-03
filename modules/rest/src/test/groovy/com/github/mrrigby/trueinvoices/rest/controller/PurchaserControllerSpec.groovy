@@ -37,7 +37,7 @@ class PurchaserControllerSpec extends WebCtxMockMvcSpec {
         def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
 
         content.purchaser.id == purchaserId
-        content.purchaser.name == "Purchaser 10"
+        content.purchaser.name == "purchaser 10"
         content.purchaser.address == "Address 10"
         content.purchaser.name == "1010101010"
     }

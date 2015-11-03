@@ -3,23 +3,28 @@ package com.github.mrrigby.trueinvoices.model;
 import java.util.Optional;
 
 /**
- * A natural or legal person that did a purchase and has to receive an invoice.
+ * A model class responsible for holding the data of single purchaser. The data hold
+ * by this object is a kind of template that can used later and associated with
+ * {@link Invoice} as as {@link Invoice#purchaserItems purchaserItem}.
  *
  * @author MrRigby
  */
 public class Purchaser {
 
+    private Optional<Long> id;
     private String name;
     private String address;
     private String taxIdentifier;
 
-    private String role;
-
-    private Purchaser(String name, String address, String taxIdentifier, String role) {
+    public Purchaser(Optional<Long> id, String name, String address, String taxIdentifier) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.taxIdentifier = taxIdentifier;
-        this.role = role;
+    }
+
+    public Optional<Long> getId() {
+        return id;
     }
 
     public String getName() {
@@ -34,46 +39,41 @@ public class Purchaser {
         return taxIdentifier;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public static class Builder {
-
+    public static class PurchaserBuilder {
+        private Optional<Long> id;
         private String name;
         private String address;
         private String taxIdentifier;
-        private String role;
 
-        private Builder() {
+        private PurchaserBuilder() {
         }
 
-        public Builder withName(String name) {
+        public static PurchaserBuilder aPurchaser() {
+            return new PurchaserBuilder();
+        }
+
+        public PurchaserBuilder withId(Optional<Long> id) {
+            this.id = id;
+            return this;
+        }
+
+        public PurchaserBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withAddress(String address) {
+        public PurchaserBuilder withAddress(String address) {
             this.address = address;
             return this;
         }
 
-        public Builder withTaxIdentifier(String taxIdentifier) {
+        public PurchaserBuilder withTaxIdentifier(String taxIdentifier) {
             this.taxIdentifier = taxIdentifier;
             return this;
         }
 
-        public Builder withRole(String role) {
-            this.role = role;
-            return this;
-        }
-
         public Purchaser build() {
-            return new Purchaser(name, address, taxIdentifier, role);
+            return new Purchaser(id, name, address, taxIdentifier);
         }
-    }
-
-    public static Builder aPurchaser() {
-        return new Builder();
     }
 }
