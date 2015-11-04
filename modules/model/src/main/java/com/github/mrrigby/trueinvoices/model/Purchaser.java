@@ -57,6 +57,11 @@ public class Purchaser {
             return this;
         }
 
+        public PurchaserBuilder withId(Long id) {
+            this.id = Optional.ofNullable(id);
+            return this;
+        }
+
         public PurchaserBuilder withName(String name) {
             this.name = name;
             return this;

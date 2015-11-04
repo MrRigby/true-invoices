@@ -2,9 +2,6 @@ package com.github.mrrigby.trueinvoices.repository;
 
 import java.time.LocalDate;
 
-/**
- * Created by lukasz on 24.10.15.
- */
 public class InvoiceListFilter {
 
     private String businessIdMask;

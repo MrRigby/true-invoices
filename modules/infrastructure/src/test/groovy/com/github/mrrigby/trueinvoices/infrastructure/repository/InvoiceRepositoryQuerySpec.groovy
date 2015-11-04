@@ -22,13 +22,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
     @Autowired
     def InvoiceRepository invoiceRepository
 
-    def JdbcTemplate jdbcTemplate
-
-    def setup() {
-        jdbcTemplate = new JdbcTemplate(dataSource)
-    }
-
-    def "Should throw InvoiceNotFoundException for non existing invoice id"() {
+    def "Should throw InvoiceNotFoundException for non existing id"() {
 
         given:
         dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies
@@ -41,7 +35,7 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
         thrown(InvoiceNotFoundException)
     }
 
-    def "Should get invoice by invoice id"() {
+    def "Should get invoice by id"() {
 
         given:
         dataSet InvoiceRepositoryDataSets.invoiceWithNoDependencies

@@ -6,8 +6,8 @@ import javax.persistence.*;
  * @author MrRigby
  */
 @Entity
-@Table(name = "purchaser_templates")
-public class PurchaserTemplateEntity {
+@Table(name = "purchasers")
+public class PurchaserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
