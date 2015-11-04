@@ -8,7 +8,6 @@ import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
 
@@ -102,11 +101,11 @@ class InvoiceRepositoryQuerySpec extends DbDrivenSpec {
 
         given:
         dataSet InvoiceRepositoryDataSets.manyInvoices
-        def firstPageable = new PageRequest(1, 5)
+        def nextPageable = new PageRequest(1, 5)
         def emptyFilter = new InvoiceListFilter()
 
         when:
-        def pageWithInvoices = invoiceRepository.listPage(firstPageable, emptyFilter)
+        def pageWithInvoices = invoiceRepository.listPage(nextPageable, emptyFilter)
 
         then:
         pageWithInvoices != null

@@ -71,28 +71,25 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Transactional
     public Page<Invoice> listPage(Pageable pageable, InvoiceListFilter filter) {
 
-        Criteria pageableInvoicesCriteria = criteriaForListFilter(filter)
+        Criteria pageableCriteria = criteriaForListFilter(filter)
                 .setFirstResult(pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .addOrder(Order.desc("documentDate").desc("id"));
 
-        List<InvoiceEntity> invoiceEntities = pageableInvoicesCriteria.list();
-
-        List<Invoice> invoices = invoiceEntities.stream()
+        List<InvoiceEntity> entities = pageableCriteria.list();
+        List<Invoice> invoices = entities.stream()
                 .map(invoiceMapper::entityToModel)
                 .collect(toList());
 
         Long invoicesCount = count(filter);
 
-        return new PageImpl<Invoice>(invoices, pageable, invoicesCount);
+        return new PageImpl<>(invoices, pageable, invoicesCount);
     }
 
     private Long count(InvoiceListFilter filter) {
-
-        Criteria countInvoicesCriteria = criteriaForListFilter(filter)
-                .setProjection(Projections.rowCount());
-
-        return (Long) countInvoicesCriteria.uniqueResult();
+        return (Long) criteriaForListFilter(filter)
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
     }
 
     private Criteria criteriaForListFilter(InvoiceListFilter filter) {
