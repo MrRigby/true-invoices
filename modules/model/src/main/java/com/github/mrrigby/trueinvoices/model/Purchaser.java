@@ -40,7 +40,7 @@ public class Purchaser {
     }
 
     public static class PurchaserBuilder {
-        private Optional<Long> id;
+        private Optional<Long> id = Optional.empty();;
         private String name;
         private String address;
         private String taxIdentifier;

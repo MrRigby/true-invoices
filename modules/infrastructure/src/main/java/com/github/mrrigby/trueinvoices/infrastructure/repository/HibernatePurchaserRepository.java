@@ -6,6 +6,7 @@ import com.github.mrrigby.trueinvoices.model.Purchaser;
 import com.github.mrrigby.trueinvoices.repository.PurchaserListFilter;
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository;
 import com.github.mrrigby.trueinvoices.repository.exceptions.PurchaserNotFoundException;
+import com.google.common.base.Preconditions;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,7 +44,7 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
         PurchaserEntity purchaserEntity = (PurchaserEntity) sessionFactory.getCurrentSession().get(PurchaserEntity.class, id);
         if (purchaserEntity == null) {
             throw new PurchaserNotFoundException(
-                    String.format("No purchaser with id: [%d] found!", id));
+                    String.format("No purchaser with id=[%d] found!", id));
         }
 
         return purchaserMapper.entityToModel(purchaserEntity);
@@ -84,12 +84,30 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
     @Override
     @Transactional
     public Purchaser save(Purchaser purchaser) {
-        return null;
+        Preconditions.checkNotNull(purchaser);
+        Preconditions.checkArgument(!purchaser.getId().isPresent());
+
+        PurchaserEntity detachedEntity = purchaserMapper.modelToEntity(purchaser);
+        Long purchaserId = (Long) sessionFactory.getCurrentSession().save(detachedEntity);
+
+        return getById(purchaserId);
     }
 
     @Override
     @Transactional
     public void update(Purchaser purchaser) throws PurchaserNotFoundException {
+        Preconditions.checkNotNull(purchaser);
+        Preconditions.checkArgument(purchaser.getId().isPresent());
+        Long purchaserId = purchaser.getId().get();
 
+        PurchaserEntity actualPurchaserEntity = (PurchaserEntity) sessionFactory.getCurrentSession().get(PurchaserEntity.class, purchaserId);
+        if (actualPurchaserEntity == null) {
+            throw new PurchaserNotFoundException(
+                    String.format("No purchaser to update found for id=[%d]", purchaserId));
+        }
+
+        PurchaserEntity purchaserEntityToUpdate = purchaserMapper.modelToEntity(purchaser);
+        sessionFactory.getCurrentSession().merge(purchaserEntityToUpdate);
+        sessionFactory.getCurrentSession().flush();
     }
 }

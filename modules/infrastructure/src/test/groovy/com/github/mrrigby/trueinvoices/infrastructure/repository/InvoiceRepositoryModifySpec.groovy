@@ -33,14 +33,14 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                 .withDocumentDate(LocalDate.of(2015, Month.OCTOBER, 1))
                 .withSoldDate(LocalDate.of(2015, Month.OCTOBER, 2))
                 .withPaymentKind(PaymentKind.TWO_WEEKS)
-                .withItems(
+                .withItemBuilders(
                     anInvoiceItem()
                             .withQuantity(1).withCommodity("Pruning trees")
                             .withSingleNetPrice(new BigDecimal(1499.99)).withTaxRate(TaxRate.valueOf(5)),
                     anInvoiceItem()
                             .withQuantity(2).withCommodity("Mowing")
                             .withSingleNetPrice(new BigDecimal(449.99)).withTaxRate(TaxRate.valueOf(7))
-                ).withPurchaser(
+                ).withPurchaserBuilder(
                     aPurchaser()
                             .withName("John Doe Inc.")
                             .withAddress("Spitfire Street 12, London")
@@ -52,14 +52,14 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
         def purchasersCountBefore = countFromDbTable("invoice_purchasers")
 
         when:
-        def savedInvoiceId = invoiceRepository.save(invoice)
+        def savedInvoice = invoiceRepository.save(invoice)
 
         then:
         def invoiceCountAfter = countFromDbTable("invoices")
         invoiceCountAfter == invoiceCountBefore + 1
 
         def dbInvoiceId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM invoices", Integer.class)
-        savedInvoiceId == dbInvoiceId
+        savedInvoice.id.get() == dbInvoiceId
 
         def itemsCountAfter = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM invoice_items WHERE invoice_id = ?", Integer.class, dbInvoiceId)
@@ -78,11 +78,11 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                 .withDocumentDate(LocalDate.of(2015, Month.NOVEMBER, 10))
                 .withSoldDate(LocalDate.of(2015, Month.NOVEMBER, 12))
                 .withPaymentKind(PaymentKind.ONE_WEEK)
-                .withItem(
+                .withItemBuilder(
                     anInvoiceItem()
                             .withQuantity(1).withCommodity("Planting apple trees")
                             .withSingleNetPrice(new BigDecimal(999.99)).withTaxRate(TaxRate.valueOf(23))
-                ).withPurchaser(
+                ).withPurchaserBuilder(
                     aPurchaser()
                             .withName("Peggy McDonnalds Inc.").withAddress("Wall Street 13, Edinburgh")
                             .withTaxIdentifier("1212123456").withRole("Investor")

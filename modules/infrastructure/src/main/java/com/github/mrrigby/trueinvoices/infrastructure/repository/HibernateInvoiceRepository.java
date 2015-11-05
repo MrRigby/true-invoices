@@ -46,7 +46,8 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
         InvoiceEntity invoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, id);
         if (invoiceEntity == null) {
-            throw new InvoiceNotFoundException("No invoice with id: " + id);
+            throw new InvoiceNotFoundException(
+                    String.format("No invoice with id=[%d]", id));
         }
 
         return invoiceMapper.entityToModel(invoiceEntity);
@@ -61,7 +62,8 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
         InvoiceEntity invoiceEntity = (InvoiceEntity) invoiceEntityCriteria.uniqueResult();
         if (invoiceEntity == null) {
-            throw new InvoiceNotFoundException("No invoice with businessId: " + businessId);
+            throw new InvoiceNotFoundException(
+                    String.format("No invoice with businessId=[%d]", businessId));
         }
 
         return invoiceMapper.entityToModel(invoiceEntity);
@@ -119,7 +121,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Override
     @Transactional
     public Invoice save(Invoice invoice) {
-
+        Preconditions.checkNotNull(invoice);
         Preconditions.checkArgument(!invoice.getId().isPresent());
 
         InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
@@ -137,13 +139,14 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Override
     @Transactional
     public void update(Invoice invoice) throws InvoiceNotFoundException {
-
+        Preconditions.checkNotNull(invoice);
         Preconditions.checkArgument(invoice.getId().isPresent());
         Long invoiceId = invoice.getId().get();
 
         InvoiceEntity actualInvoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, invoiceId);
         if (actualInvoiceEntity == null) {
-            throw new InvoiceNotFoundException("No invoice to update! InvoiceId = " + invoiceId);
+            throw new InvoiceNotFoundException(
+                    String.format("No invoice to update found for id=[%d]", invoiceId));
         }
 
         InvoiceEntity invoiceEntityToUpdate = invoiceMapper.modelToEntity(invoice);
