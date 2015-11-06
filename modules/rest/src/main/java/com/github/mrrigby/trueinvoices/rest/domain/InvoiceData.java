@@ -13,6 +13,9 @@ import static com.github.mrrigby.trueinvoices.model.Invoice.anInvoice;
 import static java.util.stream.Collectors.toList;
 
 /**
+ * Object used to deserialize HTTP JSON request to handy JavaBean, that can be further used
+ * to easily create {@link Invoice} model.
+ *
  * @author MrRigby
  */
 public class InvoiceData implements Serializable {
@@ -27,7 +30,7 @@ public class InvoiceData implements Serializable {
     private PaymentKind paymentKind;
 
     private List<InvoiceItemData> items;
-    private List<PurchaserData> purchasers;
+    private List<PurchaserItemData> purchasers;
 
     public Invoice.Builder toModelBuilder() {
 
@@ -47,58 +50,34 @@ public class InvoiceData implements Serializable {
         // purchasers
         if (purchasers != null) {
             invoiceBuilder.withPurchaserBuilders(purchasers.stream()
-                    .map(PurchaserData::toModelBuilder)
+                    .map(PurchaserItemData::toModelBuilder)
                     .collect(toList()));
         }
 
         return invoiceBuilder;
     }
 
-    public String getBusinessId() {
-        return businessId;
-    }
-
     public void setBusinessId(String businessId) {
         this.businessId = businessId;
-    }
-
-    public LocalDate getDocumentDate() {
-        return documentDate;
     }
 
     public void setDocumentDate(LocalDate documentDate) {
         this.documentDate = documentDate;
     }
 
-    public LocalDate getSoldDate() {
-        return soldDate;
-    }
-
     public void setSoldDate(LocalDate soldDate) {
         this.soldDate = soldDate;
-    }
-
-    public PaymentKind getPaymentKind() {
-        return paymentKind;
     }
 
     public void setPaymentKind(PaymentKind paymentKind) {
         this.paymentKind = paymentKind;
     }
 
-    public List<InvoiceItemData> getItems() {
-        return items;
-    }
-
     public void setItems(List<InvoiceItemData> items) {
         this.items = items;
     }
 
-    public List<PurchaserData> getPurchasers() {
-        return purchasers;
-    }
-
-    public void setPurchasers(List<PurchaserData> purchasers) {
+    public void setPurchasers(List<PurchaserItemData> purchasers) {
         this.purchasers = purchasers;
     }
 }

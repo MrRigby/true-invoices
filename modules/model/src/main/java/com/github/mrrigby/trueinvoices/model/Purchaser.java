@@ -1,5 +1,9 @@
 package com.github.mrrigby.trueinvoices.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.mrrigby.trueinvoices.model.jsonsupport.OptionalSerializer;
+
 import java.util.Optional;
 
 /**
@@ -23,18 +27,23 @@ public class Purchaser {
         this.taxIdentifier = taxIdentifier;
     }
 
+    @JsonGetter
+    @JsonSerialize(using = OptionalSerializer.LongOptionalSerializer.class)
     public Optional<Long> getId() {
         return id;
     }
 
+    @JsonGetter
     public String getName() {
         return name;
     }
 
+    @JsonGetter
     public String getAddress() {
         return address;
     }
 
+    @JsonGetter
     public String getTaxIdentifier() {
         return taxIdentifier;
     }

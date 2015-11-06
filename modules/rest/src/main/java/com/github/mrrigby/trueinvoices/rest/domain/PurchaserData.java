@@ -1,8 +1,14 @@
 package com.github.mrrigby.trueinvoices.rest.domain;
 
-import com.github.mrrigby.trueinvoices.model.PurchaserItem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.mrrigby.trueinvoices.model.Purchaser.PurchaserBuilder;
+
 
 /**
+ * Object used to deserialize HTTP JSON request to handy JavaBean, that can be further used
+ * to easily create {@link com.github.mrrigby.trueinvoices.model.Purchaser} model.
+ *
  * @author MrRigby
  */
 public class PurchaserData {
@@ -10,48 +16,20 @@ public class PurchaserData {
     private String name;
     private String address;
     private String taxIdentifier;
-    private String role;
 
-    public PurchaserItem.Builder toModelBuilder() {
-
-        PurchaserItem.Builder purchaserBuilder = PurchaserItem.aPurchaser()
-                .withName(name)
-                .withAddress(address)
-                .withTaxIdentifier(taxIdentifier)
-                .withRole(role);
-
-        return purchaserBuilder;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    @JsonCreator
+    public PurchaserData(@JsonProperty("name") String name,
+                         @JsonProperty("address") String address,
+                         @JsonProperty("taxIdentifier") String taxIdentifier) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getTaxIdentifier() {
-        return taxIdentifier;
-    }
-
-    public void setTaxIdentifier(String taxIdentifier) {
         this.taxIdentifier = taxIdentifier;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public PurchaserBuilder toModelBuilder() {
+        return PurchaserBuilder.aPurchaser()
+                .withName(this.name)
+                .withAddress(this.address)
+                .withTaxIdentifier(this.taxIdentifier);
     }
 }

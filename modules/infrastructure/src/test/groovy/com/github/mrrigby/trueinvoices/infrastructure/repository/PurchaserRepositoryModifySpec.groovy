@@ -2,7 +2,6 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository
 
 import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
-import com.github.mrrigby.trueinvoices.model.Purchaser
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration

@@ -19,6 +19,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = [RestConfig.class, RepositoryConfig.class])
 class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
 
+    def "Should get paged view of invoices"() {
+
+        given:
+        dataSet manyInvoices
+
+        when:
+        def response = mockMvc
+                .perform(get("/invoice?page=0&size=5")
+                .contentType(MediaTypes.HAL_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+
+        then:
+        response.andExpect(status().isOk())
+        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+        content._embedded.invoiceResourceList.size() == 5
+        content.page.size == 5
+        content.page.totalElements == 7
+        content.page.totalPages == 2
+        content.page.number == 0
+    }
+
     def "Should get invoice by id"() {
 
         given:
@@ -46,8 +68,8 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items[0].commodity == "Pruning trees"
         content.invoice.items[1].commodity == "Mowing"
 
-        content.invoice.purchaserItems.size() == 1
-        content.invoice.purchaserItems[0].name == "John Doe Inc."
+        content.invoice.purchasers.size() == 1
+        content.invoice.purchasers[0].name == "John Doe Inc."
     }
 
     def "Should get NotFound while getting missing invoice by id"() {
@@ -68,27 +90,5 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
         content.httpStatusCode == 404
         content.httpStatusName == "NOT_FOUND"
-    }
-
-    def "Should get paged view of invoices"() {
-
-        given:
-        dataSet manyInvoices
-
-        when:
-        def response = mockMvc
-                .perform(get("/invoice/paged?page=0&size=5")
-                .contentType(MediaTypes.HAL_JSON)
-                .accept(MediaTypes.HAL_JSON))
-                .andDo(print())
-
-        then:
-        response.andExpect(status().isOk())
-        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
-        content._embedded.invoiceResourceList.size() == 5
-        content.page.size == 5
-        content.page.totalElements == 7
-        content.page.totalPages == 2
-        content.page.number == 0
     }
 }

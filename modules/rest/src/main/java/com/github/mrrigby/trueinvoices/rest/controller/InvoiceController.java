@@ -38,6 +38,15 @@ public class InvoiceController {
         this.invoiceResourceAssembler = invoiceResourceAssembler;
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public HttpEntity<PagedResources<InvoiceResource>> getPagedInvoicesList(
+            @PageableDefault(size = 20, page = 0) Pageable pageable,
+            PagedResourcesAssembler<Invoice> assembler) {
+        Page<Invoice> invoicesPage = invoiceRepository.listPage(pageable, null);
+        PagedResources<InvoiceResource> invoicesResources = assembler.toResource(invoicesPage, invoiceResourceAssembler);
+        return new ResponseEntity<>(invoicesResources, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public HttpEntity<InvoiceResource> getInvoice(@PathVariable("id") Long id) {
         Invoice invoice = invoiceRepository.getById(id);
@@ -47,7 +56,6 @@ public class InvoiceController {
 
     @RequestMapping(method = RequestMethod.POST)
     public HttpEntity<InvoiceResource> saveInvoice(@RequestBody InvoiceData invoiceData) {
-
         Invoice invoice = invoiceData.toModelBuilder().build();
         Invoice savedInvoice = invoiceRepository.save(invoice);
         InvoiceResource invoiceResource = invoiceResourceAssembler.toResource(savedInvoice);
@@ -57,20 +65,10 @@ public class InvoiceController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public HttpEntity<InvoiceResource> updateInvoice(
             @PathVariable("id") Long invoiceId, @RequestBody InvoiceData invoiceData) {
-
         Invoice invoice = invoiceData.toModelBuilder().withId(invoiceId).build();
         invoiceRepository.update(invoice);
         InvoiceResource invoiceResource = invoiceResourceAssembler.toResource(invoice);
         return new ResponseEntity<>(invoiceResource, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/paged", method = RequestMethod.GET)
-    public HttpEntity<PagedResources<InvoiceResource>> pagedInvoices(
-            @PageableDefault(size = 20, page = 0) Pageable pageable,
-            PagedResourcesAssembler<Invoice> assembler) {
-        Page<Invoice> invoicesPage = invoiceRepository.listPage(pageable, null);
-        PagedResources<InvoiceResource> invoicesResources = assembler.toResource(invoicesPage, invoiceResourceAssembler);
-        return new ResponseEntity<>(invoicesResources, HttpStatus.OK);
     }
 
     @ExceptionHandler(InvoiceNotFoundException.class)
@@ -82,6 +80,4 @@ public class InvoiceController {
                 HttpStatus.NOT_FOUND
         );
     }
-
-    // ?? this path: return new ResponseEntity<InvoiceResource>(HttpStatus.BAD_REQUEST);
 }

@@ -1,4 +1,5 @@
 package com.github.mrrigby.trueinvoices.rest.controller
+
 import com.github.mrrigby.trueinvoices.common.test.rest.WebCtxMockMvcSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
 import com.github.mrrigby.trueinvoices.rest.RestConfig
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * @author MrRigby
  */
@@ -43,8 +45,8 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items[0].commodity == "Pruning trees"
         content.invoice.items[1].commodity == "Mowing"
 
-        content.invoice.purchaserItems.size() == 1
-        content.invoice.purchaserItems[0].name == "John Doe Inc."
+        content.invoice.purchasers.size() == 1
+        content.invoice.purchasers[0].name == "John Doe Inc."
     }
 
     def "Should update invoice"() {
@@ -75,8 +77,8 @@ class InvoiceModifyControllerSpec extends WebCtxMockMvcSpec {
         content.invoice.items.size() == 1
         content.invoice.items[0].commodity == "Planting apple tree"
 
-        content.invoice.purchaserItems.size() == 1
-        content.invoice.purchaserItems[0].name == "Mrs Applebaum Co."
+        content.invoice.purchasers.size() == 1
+        content.invoice.purchasers[0].name == "Mrs Applebaum Co."
     }
 
     def "Should get NotFound while the missing invoice's update"() {
