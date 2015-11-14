@@ -3,6 +3,7 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository
 import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository
+import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
@@ -19,6 +20,9 @@ class PurchaserRepositoryModifySpec extends DbDrivenSpec {
     @Autowired
     def PurchaserRepository purchaserRepository
 
+    @Autowired
+    def SessionFactory sessionFactory
+
     def "Should save purchaser"() {
 
         given:
@@ -33,8 +37,7 @@ class PurchaserRepositoryModifySpec extends DbDrivenSpec {
         def savedPurchaser = purchaserRepository.save(purchaser)
 
         then:
-        def purchasersCountAfter = countFromDbTable("purchasers")
-        purchasersCountAfter == purchasersCountBefore + 1
+        countFromDbTable("purchasers") == purchasersCountBefore + 1
 
         def dbPurchaserId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM purchasers", Integer.class)
         savedPurchaser.id.get() == dbPurchaserId
@@ -54,9 +57,15 @@ class PurchaserRepositoryModifySpec extends DbDrivenSpec {
 
         when:
         purchaserRepository.update(purchaser)
+        sessionFactory.getCurrentSession().flush();
 
         then:
-        def purchasersCountAfter = countFromDbTable("purchasers")
-        purchasersCountAfter == purchasersCountBefore
+        countFromDbTable("purchasers") == purchasersCountBefore
+
+        def purchaserFromDb = jdbcTemplate.queryForMap(
+                """SELECT * FROM purchasers WHERE id = ?""", purchaser.id.get())
+        purchaserFromDb.name == "Zenon"
+        purchaserFromDb.address == "Baker Street 12, London 123"
+        purchaserFromDb.tax_id == "1234567890"
     }
 }

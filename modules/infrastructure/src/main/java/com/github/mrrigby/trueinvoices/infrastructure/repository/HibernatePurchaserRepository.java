@@ -108,6 +108,5 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
 
         PurchaserEntity purchaserEntityToUpdate = purchaserMapper.modelToEntity(purchaser);
         sessionFactory.getCurrentSession().merge(purchaserEntityToUpdate);
-        sessionFactory.getCurrentSession().flush();
     }
 }

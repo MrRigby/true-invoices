@@ -4,6 +4,7 @@ import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
 import com.github.mrrigby.trueinvoices.model.PaymentKind
 import com.github.mrrigby.trueinvoices.model.TaxRate
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
+import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.annotation.Transactional
@@ -24,6 +25,9 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
 
     @Autowired
     def InvoiceRepository invoiceRepository
+
+    @Autowired
+    def SessionFactory sessionFactory
 
     def "Should save invoice"() {
 
@@ -48,26 +52,18 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
                             .withRole("PurchaserItem")
                 ).build()
         def invoiceCountBefore = countFromDbTable("invoices")
-        def itemsCountBefore = countFromDbTable("invoice_items")
-        def purchasersCountBefore = countFromDbTable("invoice_purchasers")
 
         when:
         def savedInvoice = invoiceRepository.save(invoice)
 
         then:
-        def invoiceCountAfter = countFromDbTable("invoices")
-        invoiceCountAfter == invoiceCountBefore + 1
+        countFromDbTable("invoices") == invoiceCountBefore + 1
+        countInvoiceItemsForInvoiceId(savedInvoice.id.get()) == 2
+        countPurchasersForInvoiceId(savedInvoice.id.get()) == 1
 
-        def dbInvoiceId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM invoices", Integer.class)
-        savedInvoice.id.get() == dbInvoiceId
-
-        def itemsCountAfter = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM invoice_items WHERE invoice_id = ?", Integer.class, dbInvoiceId)
-        itemsCountAfter == 2
-
-        def purchasersCountAfter = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM invoice_purchasers WHERE invoice_id = ?", Integer.class, dbInvoiceId)
-        purchasersCountAfter == 1
+        def invoiceFromDb = jdbcTemplate.queryForMap(
+                """SELECT * FROM invoices WHERE id = ?""", savedInvoice.id.get())
+        invoiceFromDb.businessId == "2015/10/0001"
     }
 
     def "Should update invoice"() {
@@ -91,16 +87,30 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
 
         when:
         invoiceRepository.update(invoice)
+        sessionFactory.getCurrentSession().flush();
 
         then:
-        def invoiceCountAfter = countFromDbTable("invoices")
-        def itemsCountAfter = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM invoice_items WHERE invoice_id = ?", Integer.class, 1L)
-        def purchasersCountAfter = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM invoice_purchasers WHERE invoice_id = ?", Integer.class, 1L)
+        countFromDbTable("invoices") == invoiceCountBefore
+        countInvoiceItemsForInvoiceId(invoice.id.get()) == 1
+        countPurchasersForInvoiceId(invoice.id.get()) == 1
 
-        invoiceCountAfter == invoiceCountBefore
-        itemsCountAfter == 1
-        purchasersCountAfter == 1
+        def invoiceFromDb = jdbcTemplate.queryForMap(
+                """SELECT * FROM invoices WHERE id = ?""", invoice.id.get())
+        invoiceFromDb.businessId == "2015/11/0002"
     }
+
+    private def countInvoiceItemsForInvoiceId(invoiceId) {
+        jdbcTemplate.queryForObject(
+                """SELECT COUNT(*)
+                       FROM invoice_items
+                       WHERE invoice_id = ?""", Integer.class, invoiceId)
+    }
+
+    private def countPurchasersForInvoiceId(invoiceId) {
+        jdbcTemplate.queryForObject(
+                """SELECT COUNT(*)
+                       FROM invoice_purchasers
+                       WHERE invoice_id = ?""", Integer.class, invoiceId)
+    }
+
 }

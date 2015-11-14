@@ -63,7 +63,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
         InvoiceEntity invoiceEntity = (InvoiceEntity) invoiceEntityCriteria.uniqueResult();
         if (invoiceEntity == null) {
             throw new InvoiceNotFoundException(
-                    String.format("No invoice with businessId=[%d]", businessId));
+                    String.format("No invoice with businessId=[%s]", businessId));
         }
 
         return invoiceMapper.entityToModel(invoiceEntity);
@@ -151,6 +151,5 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
         InvoiceEntity invoiceEntityToUpdate = invoiceMapper.modelToEntity(invoice);
         sessionFactory.getCurrentSession().merge(invoiceEntityToUpdate);
-        sessionFactory.getCurrentSession().flush();
     }
 }
