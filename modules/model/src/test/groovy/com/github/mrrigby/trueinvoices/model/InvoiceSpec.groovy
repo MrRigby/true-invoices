@@ -32,7 +32,7 @@ class InvoiceSpec extends Specification {
 
         given:
         Invoice invoice = anInvoice()
-                .withItems(
+                .withItemBuilders(
                     anInvoiceItem().withQuantity(1).withSingleNetPrice(BigDecimal.valueOf(999.99)).withTaxRate((short) 7),
                     anInvoiceItem().withQuantity(2).withSingleNetPrice(BigDecimal.valueOf(499.99)).withTaxRate((short) 23)
                 ).build()
