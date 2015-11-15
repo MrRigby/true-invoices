@@ -2,6 +2,7 @@ package com.github.mrrigby.trueinvoices.rest.controller;
 
 import com.github.mrrigby.trueinvoices.model.Purchaser;
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository;
+import com.github.mrrigby.trueinvoices.repository.dto.PurchaserListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.PurchaserNotFoundException;
 import com.github.mrrigby.trueinvoices.rest.assembler.PurchaserResource;
 import com.github.mrrigby.trueinvoices.rest.assembler.PurchaserResourceAssembler;
@@ -41,8 +42,12 @@ public class PurchaserController {
     @RequestMapping(method = RequestMethod.GET)
     public HttpEntity<PagedResources<PurchaserResource>> getPagedPurchasersList(
             @PageableDefault(size = 20, page = 0) Pageable pageable,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String taxId,
             PagedResourcesAssembler<Purchaser> assembler) {
-        Page<Purchaser> purchasersPage = purchaserRepository.listPage(pageable, null);
+
+        PurchaserListFilter listFilter = PurchaserListFilter.from(name, taxId);
+        Page<Purchaser> purchasersPage = purchaserRepository.listPage(pageable, listFilter);
         PagedResources<PurchaserResource> purchasersResources = assembler.toResource(purchasersPage, purchaserResourceAssembler);
         return new ResponseEntity<>(purchasersResources, HttpStatus.OK);
     }
@@ -64,7 +69,8 @@ public class PurchaserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public HttpEntity<PurchaserResource> updatePurchaser(
-            @PathVariable("id") Long purchaserId, @RequestBody PurchaserData purchaserData) {
+            @PathVariable("id") Long purchaserId,
+            @RequestBody PurchaserData purchaserData) {
         Purchaser purchaser = purchaserData.toModelBuilder().withId(purchaserId).build();
         purchaserRepository.update(purchaser);
         PurchaserResource purchaserResource = purchaserResourceAssembler.toResource(purchaser);
@@ -74,7 +80,6 @@ public class PurchaserController {
     @ExceptionHandler(PurchaserNotFoundException.class)
     public ResponseEntity<ApiError> purchaserNotFound(
             HttpServletRequest request, HttpServletResponse response, Exception ex) {
-
         return new ResponseEntity<>(
                 new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI().toString()),
                 HttpStatus.NOT_FOUND

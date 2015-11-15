@@ -3,8 +3,8 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository
 import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
 import com.github.mrrigby.trueinvoices.model.Invoice
-import com.github.mrrigby.trueinvoices.repository.InvoiceListFilter
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository
+import com.github.mrrigby.trueinvoices.repository.dto.InvoiceListFilter
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest

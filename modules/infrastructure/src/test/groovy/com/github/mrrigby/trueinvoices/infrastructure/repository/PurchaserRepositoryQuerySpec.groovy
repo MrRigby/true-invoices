@@ -2,7 +2,7 @@ package com.github.mrrigby.trueinvoices.infrastructure.repository
 
 import com.github.mrrigby.trueinvoices.common.test.infrastructure.DbDrivenSpec
 import com.github.mrrigby.trueinvoices.infrastructure.config.RepositoryConfig
-import com.github.mrrigby.trueinvoices.repository.PurchaserListFilter
+import com.github.mrrigby.trueinvoices.repository.dto.PurchaserListFilter
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository
 import com.github.mrrigby.trueinvoices.repository.exceptions.PurchaserNotFoundException
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,7 @@
 package com.github.mrrigby.trueinvoices.repository;
 
 import com.github.mrrigby.trueinvoices.model.Purchaser;
+import com.github.mrrigby.trueinvoices.repository.dto.PurchaserListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.PurchaserNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

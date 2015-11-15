@@ -1,12 +1,14 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.PurchaserEntity;
+import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.HibernateRepository;
 import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.PurchaserMapper;
 import com.github.mrrigby.trueinvoices.model.Purchaser;
-import com.github.mrrigby.trueinvoices.repository.PurchaserListFilter;
 import com.github.mrrigby.trueinvoices.repository.PurchaserRepository;
+import com.github.mrrigby.trueinvoices.repository.dto.PurchaserListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.PurchaserNotFoundException;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -21,19 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.hibernate.criterion.Restrictions.eq;
+import static org.hibernate.criterion.Restrictions.like;
 
 /**
+ * Hibernate-based implementation of the {@Link PurchaserRepository}, implemented as an extension of
+ * {@link HibernateRepository}.
+ *
  * @author MrRigby
  */
 @Repository
-public class HibernatePurchaserRepository implements PurchaserRepository {
+public class HibernatePurchaserRepository extends HibernateRepository
+        implements PurchaserRepository {
 
-    private SessionFactory sessionFactory;
     private PurchaserMapper purchaserMapper;
 
     @Autowired
     public HibernatePurchaserRepository(SessionFactory sessionFactory, PurchaserMapper purchaserMapper) {
-        this.sessionFactory = sessionFactory;
+        super(sessionFactory);
         this.purchaserMapper = purchaserMapper;
     }
 
@@ -41,7 +48,7 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
     @Transactional(readOnly = true)
     public Purchaser getById(Long id) throws PurchaserNotFoundException {
 
-        PurchaserEntity purchaserEntity = (PurchaserEntity) sessionFactory.getCurrentSession().get(PurchaserEntity.class, id);
+        PurchaserEntity purchaserEntity = (PurchaserEntity) session().get(PurchaserEntity.class, id);
         if (purchaserEntity == null) {
             throw new PurchaserNotFoundException(
                     String.format("No purchaser with id=[%d] found!", id));
@@ -76,8 +83,19 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
     }
 
     private Criteria criteriaForListFilter(PurchaserListFilter filter) {
-        Criteria criteria = sessionFactory.getCurrentSession()
+        Criteria criteria = session()
                 .createCriteria(PurchaserEntity.class);
+        if (filter == null) {
+            return criteria;
+        }
+
+        if (!Strings.isNullOrEmpty(filter.getNameMask())) {
+            criteria.add(like("purchaserData.name", String.format("%%%s%%", filter.getNameMask())));
+        }
+        if (!Strings.isNullOrEmpty(filter.getTaxIdentifier())) {
+            criteria.add(eq("purchaserData.taxId", String.format("%s", filter.getTaxIdentifier())));
+        }
+
         return criteria;
     }
 
@@ -88,7 +106,7 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
         Preconditions.checkArgument(!purchaser.getId().isPresent());
 
         PurchaserEntity detachedEntity = purchaserMapper.modelToEntity(purchaser);
-        Long purchaserId = (Long) sessionFactory.getCurrentSession().save(detachedEntity);
+        Long purchaserId = (Long) session().save(detachedEntity);
 
         return getById(purchaserId);
     }
@@ -100,13 +118,13 @@ public class HibernatePurchaserRepository implements PurchaserRepository {
         Preconditions.checkArgument(purchaser.getId().isPresent());
         Long purchaserId = purchaser.getId().get();
 
-        PurchaserEntity actualPurchaserEntity = (PurchaserEntity) sessionFactory.getCurrentSession().get(PurchaserEntity.class, purchaserId);
+        PurchaserEntity actualPurchaserEntity = (PurchaserEntity) session().get(PurchaserEntity.class, purchaserId);
         if (actualPurchaserEntity == null) {
             throw new PurchaserNotFoundException(
                     String.format("No purchaser to update found for id=[%d]", purchaserId));
         }
 
         PurchaserEntity purchaserEntityToUpdate = purchaserMapper.modelToEntity(purchaser);
-        sessionFactory.getCurrentSession().merge(purchaserEntityToUpdate);
+        session().merge(purchaserEntityToUpdate);
     }
 }

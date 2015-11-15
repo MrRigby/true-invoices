@@ -63,7 +63,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
 
         def invoiceFromDb = jdbcTemplate.queryForMap(
                 """SELECT * FROM invoices WHERE id = ?""", savedInvoice.id.get())
-        invoiceFromDb.businessId == "2015/10/0001"
+        invoiceFromDb.business_id == "2015/10/0001"
     }
 
     def "Should update invoice"() {
@@ -96,7 +96,7 @@ class InvoiceRepositoryModifySpec extends DbDrivenSpec {
 
         def invoiceFromDb = jdbcTemplate.queryForMap(
                 """SELECT * FROM invoices WHERE id = ?""", invoice.id.get())
-        invoiceFromDb.businessId == "2015/11/0002"
+        invoiceFromDb.business_id == "2015/11/0002"
     }
 
     private def countInvoiceItemsForInvoiceId(invoiceId) {

@@ -1,6 +1,7 @@
 package com.github.mrrigby.trueinvoices.repository;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
+import com.github.mrrigby.trueinvoices.repository.dto.InvoiceListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -41,6 +41,28 @@ class PurchaserQueryControllerSpec extends WebCtxMockMvcSpec {
         content.page.number == 0
     }
 
+    def "Should get paged view of purchasers with filtering"() {
+
+        given:
+        dataSet manyPurchasers
+
+        when:
+        def response = mockMvc
+                .perform(get("/purchaser?page=0&size=5&name={name}&taxId={taxId}", "Purchaser 1", "1010101010")
+                .contentType(MediaTypes.HAL_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+
+        then:
+        response.andExpect(status().isOk())
+        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+        content._embedded.purchaserResourceList.size() == 1
+        content.page.size == 5
+        content.page.totalElements == 1
+        content.page.totalPages == 1
+        content.page.number == 0
+    }
+
     def "Should get purchaser by id"() {
 
         given:

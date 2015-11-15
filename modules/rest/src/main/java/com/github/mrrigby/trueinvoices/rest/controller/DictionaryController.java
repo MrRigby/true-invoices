@@ -26,30 +26,29 @@ public class DictionaryController {
     /**
      * The most frequently used tax rates.
      */
-    private static final List<DictionaryItem<Short>> freqTaxRates =
+    private static final List<DictionaryItem<Short>> COMMON_TAX_RATES =
             Arrays.asList(
                     (short) 0, (short) 3, (short) 7, (short) 23
             ).stream()
-                    .map(taxValue -> new TaxRate(taxValue))
+                    .map(taxValue -> TaxRate.valueOf(taxValue))
                     .map(rate -> new DictionaryItem<>(rate.toShort(), rate.toString()))
                     .collect(Collectors.toList());
 
     @RequestMapping(value = "/taxRates", method = RequestMethod.GET)
     public HttpEntity<List<DictionaryItem<Short>>> listTaxRates() {
-        return new ResponseEntity<>(freqTaxRates, HttpStatus.OK);
+        return new ResponseEntity<>(COMMON_TAX_RATES, HttpStatus.OK);
     }
 
     /**
      * All payment kinds.
      */
-    private static final List<DictionaryItem<String>> allPaymentKinds =
+    private static final List<DictionaryItem<String>> COMMON_PAYMENT_KINDS =
             Arrays.asList(PaymentKind.values()).stream()
                     .map(kind -> new DictionaryItem<>(kind.name(), kind.name()))
                     .collect(Collectors.toList());
 
     @RequestMapping(value = "/paymentKinds", method = RequestMethod.GET)
     public HttpEntity<List<DictionaryItem<String>>> listPaymentKinds() {
-        return new ResponseEntity<>(allPaymentKinds, HttpStatus.OK);
+        return new ResponseEntity<>(COMMON_PAYMENT_KINDS, HttpStatus.OK);
     }
-
 }

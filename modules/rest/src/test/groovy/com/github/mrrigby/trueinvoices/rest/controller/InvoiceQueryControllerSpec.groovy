@@ -41,6 +41,29 @@ class InvoiceQueryControllerSpec extends WebCtxMockMvcSpec {
         content.page.number == 0
     }
 
+    def "Should get paged view of invoices with filtering"() {
+
+        given:
+        dataSet manyInvoices
+
+        when:
+        def response = mockMvc
+                .perform(get("/invoice?page=0&size=5&businessId={bid}&dateFrom={from}&dateTo={to}&purchaser={p}",
+                    "2015/09", "2015-10-02", "2015-10-04", "")
+                .contentType(MediaTypes.HAL_JSON)
+                .accept(MediaTypes.HAL_JSON))
+                .andDo(print())
+
+        then:
+        response.andExpect(status().isOk())
+        def content = new JsonSlurper().parseText(response.andReturn().response.contentAsString)
+        content._embedded.invoiceResourceList.size() == 3
+        content.page.size == 5
+        content.page.totalElements == 3
+        content.page.totalPages == 1
+        content.page.number == 0
+    }
+
     def "Should get invoice by id"() {
 
         given:

@@ -2,6 +2,7 @@ package com.github.mrrigby.trueinvoices.rest.controller;
 
 import com.github.mrrigby.trueinvoices.model.Invoice;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
+import com.github.mrrigby.trueinvoices.repository.dto.InvoiceListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
 import com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResource;
 import com.github.mrrigby.trueinvoices.rest.assembler.InvoiceResourceAssembler;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 
 /**
  * @author MrRigby
@@ -41,8 +45,14 @@ public class InvoiceController {
     @RequestMapping(method = RequestMethod.GET)
     public HttpEntity<PagedResources<InvoiceResource>> getPagedInvoicesList(
             @PageableDefault(size = 20, page = 0) Pageable pageable,
+            @RequestParam(required = false) String businessId,
+            @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo,
+            @RequestParam(required = false) String purchaser,
             PagedResourcesAssembler<Invoice> assembler) {
-        Page<Invoice> invoicesPage = invoiceRepository.listPage(pageable, null);
+
+        InvoiceListFilter filter = InvoiceListFilter.from(businessId, dateFrom, dateTo, purchaser);
+        Page<Invoice> invoicesPage = invoiceRepository.listPage(pageable, filter);
         PagedResources<InvoiceResource> invoicesResources = assembler.toResource(invoicesPage, invoiceResourceAssembler);
         return new ResponseEntity<>(invoicesResources, HttpStatus.OK);
     }

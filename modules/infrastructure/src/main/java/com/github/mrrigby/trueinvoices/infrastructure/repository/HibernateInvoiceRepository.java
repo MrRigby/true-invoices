@@ -1,10 +1,11 @@
 package com.github.mrrigby.trueinvoices.infrastructure.repository;
 
 import com.github.mrrigby.trueinvoices.infrastructure.entity.InvoiceEntity;
+import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.HibernateRepository;
 import com.github.mrrigby.trueinvoices.infrastructure.repository.mapper.InvoiceMapper;
 import com.github.mrrigby.trueinvoices.model.Invoice;
-import com.github.mrrigby.trueinvoices.repository.InvoiceListFilter;
 import com.github.mrrigby.trueinvoices.repository.InvoiceRepository;
+import com.github.mrrigby.trueinvoices.repository.dto.InvoiceListFilter;
 import com.github.mrrigby.trueinvoices.repository.exceptions.InvoiceNotFoundException;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -20,23 +21,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.hibernate.criterion.Restrictions.like;
 
 /**
+ * Hibernate-based implementation of the {@Link InvoiceRepository}, implemented as an extension of
+ * {@link HibernateRepository}.
+ *
  * @author MrRigby
  */
 @Repository
-public class HibernateInvoiceRepository implements InvoiceRepository {
+public class HibernateInvoiceRepository extends HibernateRepository
+        implements InvoiceRepository {
 
-    private SessionFactory sessionFactory;
     private InvoiceMapper invoiceMapper;
 
     @Autowired
     public HibernateInvoiceRepository(SessionFactory sessionFactory, InvoiceMapper invoiceMapper) {
-        this.sessionFactory = sessionFactory;
+        super(sessionFactory);
         this.invoiceMapper = invoiceMapper;
     }
 
@@ -44,7 +50,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Transactional(readOnly = true)
     public Invoice getById(Long id) throws InvoiceNotFoundException {
 
-        InvoiceEntity invoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, id);
+        InvoiceEntity invoiceEntity = (InvoiceEntity) session().get(InvoiceEntity.class, id);
         if (invoiceEntity == null) {
             throw new InvoiceNotFoundException(
                     String.format("No invoice with id=[%d]", id));
@@ -57,7 +63,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
     @Transactional(readOnly = true)
     public Invoice getByBusinessId(String businessId) throws InvoiceNotFoundException {
 
-        Criteria invoiceEntityCriteria = sessionFactory.getCurrentSession().createCriteria(InvoiceEntity.class)
+        Criteria invoiceEntityCriteria = session().createCriteria(InvoiceEntity.class)
                 .add(Restrictions.eq("businessId", businessId));
 
         InvoiceEntity invoiceEntity = (InvoiceEntity) invoiceEntityCriteria.uniqueResult();
@@ -96,7 +102,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
 
     private Criteria criteriaForListFilter(InvoiceListFilter filter) {
 
-        Criteria criteria = sessionFactory.getCurrentSession()
+        Criteria criteria = session()
                 .createCriteria(InvoiceEntity.class);
         if (filter == null) {
             return criteria;
@@ -106,10 +112,12 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
             criteria.add(like("businessId", String.format("%%%s%%", filter.getBusinessIdMask())));
         }
         if (filter.getDateFrom() != null) {
-            criteria.add(Restrictions.ge("documentDate", filter.getDateFrom()));
+            Date dateFrom = Date.from(filter.getDateFrom().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            criteria.add(Restrictions.ge("documentDate", dateFrom));
         }
         if (filter.getDateTo() != null) {
-            criteria.add(Restrictions.le("documentDate", filter.getDateTo()));
+            Date dateTo = Date.from(filter.getDateTo().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            criteria.add(Restrictions.le("documentDate", dateTo));
         }
         if (!Strings.isNullOrEmpty(filter.getPurchaserMask())) {
             criteria.add(like("purchasers.name", String.format("%%%s%%", filter.getPurchaserMask())));
@@ -125,7 +133,7 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
         Preconditions.checkArgument(!invoice.getId().isPresent());
 
         InvoiceEntity detachedEntity = invoiceMapper.modelToEntity(invoice);
-        Long invoiceId = (Long) sessionFactory.getCurrentSession().save(detachedEntity);
+        Long invoiceId = (Long) session().save(detachedEntity);
 
         return getById(invoiceId);
     }
@@ -143,13 +151,13 @@ public class HibernateInvoiceRepository implements InvoiceRepository {
         Preconditions.checkArgument(invoice.getId().isPresent());
         Long invoiceId = invoice.getId().get();
 
-        InvoiceEntity actualInvoiceEntity = (InvoiceEntity) sessionFactory.getCurrentSession().get(InvoiceEntity.class, invoiceId);
+        InvoiceEntity actualInvoiceEntity = (InvoiceEntity) session().get(InvoiceEntity.class, invoiceId);
         if (actualInvoiceEntity == null) {
             throw new InvoiceNotFoundException(
                     String.format("No invoice to update found for id=[%d]", invoiceId));
         }
 
         InvoiceEntity invoiceEntityToUpdate = invoiceMapper.modelToEntity(invoice);
-        sessionFactory.getCurrentSession().merge(invoiceEntityToUpdate);
+        session().merge(invoiceEntityToUpdate);
     }
 }

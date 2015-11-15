@@ -42,17 +42,17 @@ class InvoiceControllerDataSets {
         invoices id: 1, business_id: "2015/09/01",
                 document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
         invoices id: 2, business_id: "2015/09/02",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-02", sold_date: "2015-10-02", payment_date: "2015-10-02", payment_kind: "CASH"
         invoices id: 3, business_id: "2015/09/03",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-03", sold_date: "2015-10-03", payment_date: "2015-10-03", payment_kind: "CASH"
         invoices id: 4, business_id: "2015/09/04",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-04", sold_date: "2015-10-04", payment_date: "2015-10-04", payment_kind: "CASH"
         invoices id: 5, business_id: "2015/09/05",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-05", sold_date: "2015-10-05", payment_date: "2015-10-05", payment_kind: "CASH"
         invoices id: 6, business_id: "2015/09/06",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-06", sold_date: "2015-10-06", payment_date: "2015-10-06", payment_kind: "CASH"
         invoices id: 7, business_id: "2015/09/07",
-                document_date: "2015-10-01", sold_date: "2015-10-01", payment_date: "2015-10-01", payment_kind: "CASH"
+                document_date: "2015-10-07", sold_date: "2015-10-07", payment_date: "2015-10-07", payment_kind: "CASH"
     }
 
 }
