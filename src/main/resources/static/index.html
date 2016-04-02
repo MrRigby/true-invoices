@@ -1,0 +1,51 @@
+<html ng-app="purchaser">
+<head>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+
+    <script src="js/purchaser.js"></script>
+
+</head>
+<body ng-controller="PurchaserGetController">
+
+    <h3>Purchaser Form</h3>
+
+    <form name="purchaserGet" ng-submit="callPurchaserGet(1)">
+        <input type="submit" value="Search" />
+    </form>
+
+    <div class="panel panel-danger"
+         ng-show="error">
+        <div class="panel-heading">{{ error }}</div>
+    </div>
+
+    <div class="panel panel-default"
+         ng-show="purchaser">
+
+<!--
+        <div class="panel-heading">Purchaser</div>
+-->
+
+        <table class="table table-striped">
+            <tr>
+                <td>Name:</td>
+                <td>{{purchaser.name}}</td>
+            </tr>
+            <tr>
+                <td>Address:</td>
+                <td>{{purchaser.address}}</td>
+            </tr>
+            <tr>
+                <td>Tax identifier:</td>
+                <td>{{ purchaser.taxIdentifier }}</td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

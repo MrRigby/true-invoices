@@ -1,0 +1,42 @@
+<html ng-app="purchaser">
+<head>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+
+    <script src="../js/purchaser.js"></script>
+
+</head>
+<body ng-controller="PurchaserListController">
+
+    <h3>Purchasers List</h3>
+
+    {{ error }}
+    <form name="purchaserListGet" ng-submit="listPurchasers()">
+        <input type="submit" value="Search" />
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Address</td>
+                <td>Tax ID</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="purchaser in purchasers">
+                <td>{{ purchaser.purchaser.id }}</td>
+                <td>{{ purchaser.purchaser.name }}</td>
+                <td>{{ purchaser.purchaser.address }}</td>
+                <td>{{ purchaser.purchaser.taxIdentifier }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
